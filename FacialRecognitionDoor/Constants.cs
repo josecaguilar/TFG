@@ -22,7 +22,7 @@
     /// </summary>
     public static class SpeechContants
     {
-        public const string InitialGreetingMessage = "¡Bienvenido al reconocimiento facial de acceso a la sala del tribunal!";
+        public const string InitialGreetingMessage = "¡Bienvenido, el reconocimiento facial de acceso a la sala del tribunal ha sido inicializado!";
 
         public const string VisitorNotRecognizedMessage = "Disculpa, no te reconozco, por lo que no podré abrir la puerta.";
         public const string NoCameraMessage = "Disculpa, parece que la cámara no está completamente inicializada.";
