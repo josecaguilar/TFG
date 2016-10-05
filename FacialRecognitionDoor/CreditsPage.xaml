@@ -28,8 +28,7 @@
             <Run Text="E.T.S.I.T. UMA"/>
             <Run Text=" 2016"/>
         </TextBlock>
-        <Image x:Name="Assets_ETSIT_jpg" Height="103" Margin="823,0,759,390" Source="Assets/ETSIT.jpg" Stretch="Fill" VerticalAlignment="Bottom"/>
-        <Image x:Name="Assets_UMA_jpg" Margin="766,44,690,652" Source="Assets/UMA.jpg" Stretch="Fill"/>
+        <Image x:Name="Assets_UMA_jpg" Margin="484,170,534,272" Source="Assets/UMA.jpg" Stretch="Fill" RenderTransformOrigin="0.621,1.254"/>
     </Grid>
 </Page>
 

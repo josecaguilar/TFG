@@ -138,7 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\CameraIcon.png" />
-    <Content Include="Assets\ETSIT.jpg" />
     <Content Include="Assets\UMA.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
