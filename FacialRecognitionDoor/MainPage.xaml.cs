@@ -370,6 +370,18 @@ namespace FacialRecognitionDoor
         }
 
         /// <summary>
+        /// Called when user hits vitual add user button. Navigates to NewUserPage page.
+        /// </summary>
+        private async void CreditsButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Stops camera preview on this page, so that it can be started on NewUserPage
+            await webcam.StopCameraPreview();
+
+            //Navigates to NewUserPage, passing through initialized WebcamHelper object
+            Frame.Navigate(typeof(CreditsPage));
+        }
+
+        /// <summary>
         /// Updates UserInterface list of whitelisted users from the list of Visitor objects (WhitelistedVisitors)
         /// </summary>
         private void UpdateWhitelistedVisitorsGrid()

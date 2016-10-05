@@ -1,0 +1,35 @@
+﻿<Page
+    x:Class="FacialRecognitionDoor.CreditsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DormRoomMonitor"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">
+        <Button x:Name="BackButton" Content="Atrás" Grid.Column="0" HorizontalAlignment="Left" Margin="44,44,0,0"  VerticalAlignment="Top" FontSize="18" Click="BackButton_Click"/>
+        <TextBlock x:Name="textBlock" Height="161" Margin="0,0,10,10" TextWrapping="Wrap" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="243">
+            <Run Text="Trabajo Fin de Grado realizado por:"/>
+            <LineBreak/>
+            <Run FontWeight="Bold" Text="José Luis Carrillo Aguilar"/>
+            <LineBreak/>
+            <LineBreak/>
+            <Run FontWeight="Bold" Text="Build: "/>
+            <Run Text="Release To Manufacturing"/>
+            <LineBreak/>
+            <Run/>
+            <LineBreak/>
+            <Run/>
+            <LineBreak/>
+            <Run Text="Grado de Ingeniería Telemática"/>
+            <LineBreak/>
+            <Run Text="E.T.S.I.T. UMA"/>
+            <Run Text=" 2016"/>
+        </TextBlock>
+        <Image x:Name="Assets_ETSIT_jpg" Height="103" Margin="823,0,759,390" Source="Assets/ETSIT.jpg" Stretch="Fill" VerticalAlignment="Bottom"/>
+        <Image x:Name="Assets_UMA_jpg" Margin="766,44,690,652" Source="Assets/UMA.jpg" Stretch="Fill"/>
+    </Grid>
+</Page>
+
