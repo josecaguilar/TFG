@@ -28,7 +28,7 @@ namespace FacialRecognitionDoor
         ApplicationDataContainer appSettings = null;
         //
         // The Client ID is used by the application to uniquely identify itself to Azure AD.
-        const string clientId = "9048db9b-1f71-4c86-b726-296a325c58a8";
+        const string clientId = "52757930-fd58-4899-bccc-b076c39a1839";
         
         const string tenant = "josecarrillooutlook.onmicrosoft.com";
         const string authority = "https://login.microsoftonline.com/" + tenant;
