@@ -22,14 +22,14 @@
     /// </summary>
     public static class SpeechContants
     {
-        public const string InitialGreetingMessage = "Welcome to the Facial Recognition Door! Speech has been initialized.";
+        public const string InitialGreetingMessage = "¡Bienvenido al reconocimiento facial de acceso a la sala del tribunal!";
 
         public const string VisitorNotRecognizedMessage = "Disculpa, no te reconozco, por lo que no podré abrir la puerta.";
-        public const string NoCameraMessage = "Sorry! It seems like your camera has not been fully initialized.";
+        public const string NoCameraMessage = "Disculpa, parece que la cámara no está completamente inicializada.";
 
         public static string GeneralGreetigMessage(string visitorName)
         {
-            return "Bienvenido to the Facial Recognition Door " + visitorName + "! I will open the door for you.";
+            return "¡Bienvenido a la sala del tribunal " + visitorName + "! Mucha suerte.";
         }
     }
 
