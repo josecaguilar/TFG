@@ -6,7 +6,7 @@
     public static class GeneralConstants
     {
         // This variable should be set to false for devices, unlike the Raspberry Pi, that have GPU support
-        public const bool DisableLiveCameraFeed = true; //Modificar para habilitar Webcam en PC
+        public const bool DisableLiveCameraFeed = false; //Modificar para habilitar Webcam en PC
 
         // Oxford Face API Primary should be entered here
         // You can obtain a subscription key for Face API by following the instructions here: https://www.microsoft.com/cognitive-services/en-us/sign-up
