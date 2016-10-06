@@ -54,9 +54,9 @@ namespace FacialRecognitionDoor.FacialRecognition
         public void AddPerson(Guid personId, string personName, string imageFolder)
         {
             // return if invalid parameters or person exists
-            if (personId == Guid.Empty                  ||
-                string.IsNullOrEmpty(personName)        ||
-                string.IsNullOrEmpty(imageFolder)       ||
+            if (personId == Guid.Empty ||
+                string.IsNullOrEmpty(personName) ||
+                string.IsNullOrEmpty(imageFolder) ||
                 _personIdToPerson.ContainsKey(personId) ||
                 _personNameToPerson.ContainsKey(personName))
                 return;
@@ -70,7 +70,7 @@ namespace FacialRecognitionDoor.FacialRecognition
         }
 
         private void RemovePerson(HSPerson person)
-        { 
+        {
             // remove all person info
             _personIdToPerson.Remove(person.Id);
             _personNameToPerson.Remove(person.Name);
@@ -124,7 +124,7 @@ namespace FacialRecognitionDoor.FacialRecognition
 
         public List<Guid> GetAllFaceIdsByPersonId(Guid personId)
         {
-            if(!_personFacesDict.ContainsKey(personId))
+            if (!_personFacesDict.ContainsKey(personId))
             {
                 return null;
             }
@@ -151,11 +151,11 @@ namespace FacialRecognitionDoor.FacialRecognition
         public void AddFace(Guid personId, Guid faceId, string faceImageFile)
         {
             // return if invalid parameters or face exists
-            if (faceId == Guid.Empty                     ||
-                personId == Guid.Empty                   ||
-                string.IsNullOrEmpty(faceImageFile)      ||
+            if (faceId == Guid.Empty ||
+                personId == Guid.Empty ||
+                string.IsNullOrEmpty(faceImageFile) ||
                 !_personIdToPerson.ContainsKey(personId) ||
-                _faceIdToFace.ContainsKey(faceId)        ||
+                _faceIdToFace.ContainsKey(faceId) ||
                 _faceNameToFace.ContainsKey(faceImageFile))
                 return;
 
@@ -166,11 +166,11 @@ namespace FacialRecognitionDoor.FacialRecognition
         public void AddFace(string personName, Guid faceId, string faceImageFile)
         {
             // return if invalid parameters or face exists
-            if (faceId == Guid.Empty                         ||
-                string.IsNullOrEmpty(faceImageFile)          ||
-                string.IsNullOrEmpty(personName)             ||
+            if (faceId == Guid.Empty ||
+                string.IsNullOrEmpty(faceImageFile) ||
+                string.IsNullOrEmpty(personName) ||
                 !_personNameToPerson.ContainsKey(personName) ||
-                _faceIdToFace.ContainsKey(faceId)            ||
+                _faceIdToFace.ContainsKey(faceId) ||
                 _faceNameToFace.ContainsKey(faceImageFile))
                 return;
 
@@ -189,8 +189,8 @@ namespace FacialRecognitionDoor.FacialRecognition
         public void RemoveFace(Guid personId, Guid faceId)
         {
             // return if person/face not exists
-            if (personId == Guid.Empty                   ||
-                faceId == Guid.Empty                     ||
+            if (personId == Guid.Empty ||
+                faceId == Guid.Empty ||
                 !_personIdToPerson.ContainsKey(personId) ||
                 !_faceIdToFace.ContainsKey(faceId))
                 return;
@@ -203,8 +203,8 @@ namespace FacialRecognitionDoor.FacialRecognition
         public void RemoveFace(string personName, string faceName)
         {
             // return if person/face not exists
-            if (string.IsNullOrEmpty(personName)             ||
-                string.IsNullOrEmpty(faceName)               ||
+            if (string.IsNullOrEmpty(personName) ||
+                string.IsNullOrEmpty(faceName) ||
                 !_personNameToPerson.ContainsKey(personName) ||
                 !_faceNameToFace.ContainsKey(faceName))
                 return;
@@ -237,3 +237,4 @@ namespace FacialRecognitionDoor.FacialRecognition
         #endregion
     }
 }
+

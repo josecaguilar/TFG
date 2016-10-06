@@ -107,8 +107,8 @@
       <DependentUpon>CreditsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DirectorySearcher.cs" />
-    <Compile Include="Facial Recognition\FaceApiUtils.cs" />
     <Compile Include="Facial Recognition\FaceApiRecognizer.cs" />
+    <Compile Include="Facial Recognition\FaceApiUtils.cs" />
     <Compile Include="Facial Recognition\FaceApiWhitelist.cs" />
     <Compile Include="Facial Recognition\FaceRecognitionException.cs" />
     <Compile Include="Facial Recognition\HSFace.cs" />

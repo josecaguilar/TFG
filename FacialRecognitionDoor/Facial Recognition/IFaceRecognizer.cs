@@ -81,9 +81,10 @@ namespace FacialRecognitionDoor.FacialRecognition
         /// </param>
         /// <returns>
         ///     The recognition results is the name of person in whitelist.
-       ///      Empty if no face belongs to person in whitelist
+        ///      Empty if no face belongs to person in whitelist
         /// </returns>
         Task<List<string>> FaceRecognizeAsync(StorageFile imageFile);
         #endregion
     }
 }
+

@@ -22,8 +22,9 @@ namespace FacialRecognitionDoor.FacialRecognition
 
         public HSFace(Guid id, string imageFile)
         {
-            Id          = id;
-            ImageFile   = imageFile;
+            Id = id;
+            ImageFile = imageFile;
         }
     }
 }
+

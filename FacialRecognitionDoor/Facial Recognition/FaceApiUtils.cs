@@ -16,8 +16,8 @@ namespace FacialRecognitionDoor.FacialRecognition
         /// </summary>
         public static bool ValidateImageFile(StorageFile imageFile)
         {
-            return  imageFile != null       &&
-                    imageFile.IsAvailable   &&
+            return imageFile != null &&
+                    imageFile.IsAvailable &&
                     (imageFile.FileType.ToUpper() == ".JPG" ||
                      imageFile.FileType.ToUpper() == ".PNG" ||
                      imageFile.FileType.ToUpper() == ".GIF" ||
@@ -40,7 +40,7 @@ namespace FacialRecognitionDoor.FacialRecognition
         {
             var faceIds = new Guid[faces.Length];
 
-            for(var i = 0; i < faces.Length; i++)
+            for (var i = 0; i < faces.Length; i++)
             {
                 faceIds[i] = faces[i].FaceId;
             }
@@ -58,7 +58,7 @@ namespace FacialRecognitionDoor.FacialRecognition
 
             var subFolders = await folder.GetFoldersAsync();
 
-            foreach(var subFolder in subFolders)
+            foreach (var subFolder in subFolders)
             {
                 fileCount += (await subFolder.GetFilesAsync()).Count;
             }
@@ -67,3 +67,4 @@ namespace FacialRecognitionDoor.FacialRecognition
         }
     }
 }
+

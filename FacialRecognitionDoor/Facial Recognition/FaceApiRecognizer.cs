@@ -12,7 +12,7 @@ namespace FacialRecognitionDoor.FacialRecognition
     class FaceApiRecognizer : IFaceRecognizer
     {
         #region Private members
-        private static readonly Lazy<FaceApiRecognizer> _recognizer = new Lazy<FaceApiRecognizer>( () => new FaceApiRecognizer());
+        private static readonly Lazy<FaceApiRecognizer> _recognizer = new Lazy<FaceApiRecognizer>(() => new FaceApiRecognizer());
 
         private FaceApiWhitelist _whitelist = null;
         private IFaceServiceClient _faceApiClient = null;
@@ -46,7 +46,8 @@ namespace FacialRecognitionDoor.FacialRecognition
         /// Constructor
         /// Initial Face Api client
         /// </summary>
-        private FaceApiRecognizer() {
+        private FaceApiRecognizer()
+        {
             _faceApiClient = new FaceServiceClient(GeneralConstants.OxfordAPIKey);
         }
         #endregion
@@ -55,7 +56,7 @@ namespace FacialRecognitionDoor.FacialRecognition
 
         private void UpdateProgress(IProgress<int> progress, double progressCnt)
         {
-            if(progress != null)
+            if (progress != null)
             {
                 progress.Report((int)Math.Round(progressCnt));
             }
@@ -70,32 +71,29 @@ namespace FacialRecognitionDoor.FacialRecognition
             bool isSuccess = true;
 
             // Train whitelist after add all person
-            Debug.WriteLine("Start training whitelist: " + WhitelistId);
+            Debug.WriteLine("Start training whitelist...");
             await _faceApiClient.TrainPersonGroupAsync(WhitelistId);
 
             TrainingStatus status;
-            
 
-            while(true)
+            while (true)
             {
                 status = await _faceApiClient.GetPersonGroupTrainingStatusAsync(WhitelistId);
 
-                // wait for training to complete
-                if (status.Status != Status.Running)
+                // if still running, continue to check status
+                if (status.Status == Status.Running)
                 {
-                    Debug.WriteLine("GetPersonGroupTrainingStatusAsync stopped running:" + status.Message);
-                    if (status.Status == Status.Failed)
-                    {
-                        isSuccess = false;
-                    }
-                    break;
+                    continue;
                 }
 
-                await Task.Delay(1000);
-                Debug.WriteLine("GetPersonGroupTrainingStatusAsync still running:" + status.Message);
+                // if timeout or failed
+                if (status.Status != Status.Succeeded)
+                {
+                    isSuccess = false;
+                }
+                break;
             }
 
-            Debug.WriteLine("GetPersonGroupTrainingStatusAsync end result: " + isSuccess);
             return isSuccess;
         }
 
@@ -120,7 +118,7 @@ namespace FacialRecognitionDoor.FacialRecognition
                 // detele person group if already exists
                 try
                 {
-                    // An exception throwed if the person group doesn't exist
+                    // An exception is thrown if the person group doesn't exist
                     await _faceApiClient.GetPersonGroupAsync(whitelistId);
                     UpdateProgress(progress, ++progressCnt);
 
@@ -129,17 +127,17 @@ namespace FacialRecognitionDoor.FacialRecognition
 
                     Debug.WriteLine("Deleted old group");
                 }
-                catch (FaceAPIException fe)
+                catch (FaceAPIException ce)
                 {
-                    if (fe.ErrorCode == "PersonGroupNotFound")
+                    // Group not found
+                    if (ce.ErrorCode == "PersonGroupNotFound")
                     {
-                        Debug.WriteLine("The person group doesn't exist");
+                        Debug.WriteLine("The group doesn't exist");
                     }
                     else
                     {
-                        throw fe;
+                        throw ce;
                     }
-
                 }
 
                 await _faceApiClient.CreatePersonGroupAsync(WhitelistId, "White List");
@@ -147,13 +145,12 @@ namespace FacialRecognitionDoor.FacialRecognition
 
                 await BuildWhiteListAsync(progress, progressCnt);
             }
-            
-            catch(FaceAPIException fe)
+            catch (FaceAPIException ce)
             {
                 isSuccess = false;
-                Debug.WriteLine("FaceAPIException in CreateWhitelistFromFolderAsync : " + fe.ErrorMessage);
+                Debug.WriteLine("ClientException in CreateWhitelistFromFolderAsync : " + ce.ErrorCode);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 isSuccess = false;
                 Debug.WriteLine("Exception in CreateWhitelistFromFolderAsync : " + e.Message);
@@ -179,7 +176,7 @@ namespace FacialRecognitionDoor.FacialRecognition
 
             var subFolders = await _whitelistFolder.GetFoldersAsync();
             // Iterate all subfolders in whitelist
-            foreach(var folder in subFolders)
+            foreach (var folder in subFolders)
             {
                 var personName = folder.Name;
 
@@ -190,20 +187,22 @@ namespace FacialRecognitionDoor.FacialRecognition
                 var files = await folder.GetFilesAsync();
 
                 // iterate all images and add to whitelist
-                foreach(var file in files)
+                foreach (var file in files)
                 {
                     Debug.WriteLine("BuildWhiteList: Processing " + file.Path);
                     try
                     {
-                        
+
                         var faceId = await DetectFaceFromImage(file);
+                        Debug.WriteLine("Face identified: " + faceId);
+
                         await AddFace(personId, faceId, file.Path);
 
                         Debug.WriteLine("This image added to whitelist successfully!");
                     }
-                    catch(FaceRecognitionException fe)
+                    catch (FaceRecognitionException fe)
                     {
-                        switch(fe.ExceptionType)
+                        switch (fe.ExceptionType)
                         {
                             case FaceRecognitionExceptionType.InvalidImage:
                                 Debug.WriteLine("WARNING: This file is not a valid image!");
@@ -239,18 +238,15 @@ namespace FacialRecognitionDoor.FacialRecognition
         /// <returns></returns>
         private async Task AddFace(Guid personId, Guid faceId, string imagePath)
         {
-
-            // prevent running synchronous call on UI thread
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 using (Stream imageStream = File.OpenRead(imagePath))
                 {
-                    _faceApiClient.AddPersonFaceAsync(WhitelistId, personId, imageStream);
+                    await _faceApiClient.AddPersonFaceAsync(WhitelistId, personId, imageStream);
                 }
-                _whitelist.AddFace(personId, faceId, imagePath);
             });
 
-
+            _whitelist.AddFace(personId, faceId, imagePath);
         }
 
         /// <summary>
@@ -277,11 +273,11 @@ namespace FacialRecognitionDoor.FacialRecognition
         {
             var stream = await imageFile.OpenStreamForReadAsync();
             var faces = await _faceApiClient.DetectAsync(stream);
-            if(faces == null || faces.Length < 1)
+            if (faces == null || faces.Length < 1)
             {
                 throw new FaceRecognitionException(FaceRecognitionExceptionType.NoFaceDetected);
             }
-            else if(faces.Length > 1)
+            else if (faces.Length > 1)
             {
                 throw new FaceRecognitionException(FaceRecognitionExceptionType.MultipleFacesDetected);
             }
@@ -305,7 +301,7 @@ namespace FacialRecognitionDoor.FacialRecognition
                 throw new FaceRecognitionException(FaceRecognitionExceptionType.NoFaceDetected);
             }
 
-            return FaceApiUtils.FacesToFaceIds(faces) ;
+            return FaceApiUtils.FacesToFaceIds(faces);
         }
 
         public async Task<bool> AddImageToWhitelistAsync(StorageFile imageFile, string personName = null)
@@ -322,14 +318,14 @@ namespace FacialRecognitionDoor.FacialRecognition
                 var filePath = imageFile.Path;
 
                 // If personName is null/empty, use the folder name as person name
-                if(string.IsNullOrEmpty(personName))
+                if (string.IsNullOrEmpty(personName))
                 {
                     personName = await FaceApiUtils.GetParentFolderNameAsync(imageFile);
                 }
 
                 // If person name doesn't exists, add it
                 var personId = _whitelist.GetPersonIdByName(personName);
-                if(personId == Guid.Empty)
+                if (personId == Guid.Empty)
                 {
                     var folder = await imageFile.GetParentAsync();
                     personId = await CreatePerson(personName, folder);
@@ -356,14 +352,14 @@ namespace FacialRecognitionDoor.FacialRecognition
             else
             {
                 // If personName is null use the folder name as person name
-                if(string.IsNullOrEmpty(personName))
+                if (string.IsNullOrEmpty(personName))
                 {
                     personName = await FaceApiUtils.GetParentFolderNameAsync(imageFile);
                 }
 
                 var personId = _whitelist.GetPersonIdByName(personName);
                 var faceId = _whitelist.GetFaceIdByFilePath(imageFile.Path);
-                if(personId == Guid.Empty || faceId == Guid.Empty)
+                if (personId == Guid.Empty || faceId == Guid.Empty)
                 {
                     isSuccess = false;
                 }
@@ -406,14 +402,14 @@ namespace FacialRecognitionDoor.FacialRecognition
         {
             bool isSuccess = true;
 
-            if(faceImagesFolder == null)
+            if (faceImagesFolder == null)
             {
                 isSuccess = false;
             }
             else
             {
                 // use folder name if do not have personName
-                if(string.IsNullOrEmpty(personName))
+                if (string.IsNullOrEmpty(personName))
                 {
                     personName = faceImagesFolder.Name;
                 }
@@ -422,7 +418,7 @@ namespace FacialRecognitionDoor.FacialRecognition
                 var files = await faceImagesFolder.GetFilesAsync();
 
                 // iterate all files and add to whitelist
-                foreach(var file in files)
+                foreach (var file in files)
                 {
                     try
                     {
@@ -430,7 +426,7 @@ namespace FacialRecognitionDoor.FacialRecognition
                         var faceId = await DetectFaceFromImage(file);
                         await AddFace(personId, faceId, file.Path);
                     }
-                    catch(FaceRecognitionException fe)
+                    catch (FaceRecognitionException fe)
                     {
                         switch (fe.ExceptionType)
                         {
@@ -451,7 +447,7 @@ namespace FacialRecognitionDoor.FacialRecognition
                 isSuccess = await TrainingWhitelistAsync();
             }
 
-            return isSuccess;                
+            return isSuccess;
         }
 
         public async Task<bool> RemovePersonFromWhitelistAsync(string personName)
@@ -459,7 +455,7 @@ namespace FacialRecognitionDoor.FacialRecognition
             bool isSuccess = true;
 
             var personId = _whitelist.GetPersonIdByName(personName);
-            if(personId == Guid.Empty)
+            if (personId == Guid.Empty)
             {
                 isSuccess = false;
             }
@@ -467,7 +463,7 @@ namespace FacialRecognitionDoor.FacialRecognition
             {
                 // remove all faces belongs to this person
                 var faceIds = _whitelist.GetAllFaceIdsByPersonId(personId);
-                if(faceIds != null)
+                if (faceIds != null)
                 {
                     var faceIdsArr = faceIds.ToArray();
                     for (int i = 0; i < faceIdsArr.Length; i++)
@@ -492,7 +488,7 @@ namespace FacialRecognitionDoor.FacialRecognition
         {
             var recogResult = new List<string>();
 
-            if(!FaceApiUtils.ValidateImageFile(imageFile))
+            if (!FaceApiUtils.ValidateImageFile(imageFile))
             {
                 throw new FaceRecognitionException(FaceRecognitionExceptionType.InvalidImage);
             }
@@ -504,9 +500,9 @@ namespace FacialRecognitionDoor.FacialRecognition
             var identificationResults = await _faceApiClient.IdentifyAsync(WhitelistId, faceIds);
 
             // add identified person name to result list
-            foreach(var result in identificationResults)
+            foreach (var result in identificationResults)
             {
-                if(result.Candidates.Length > 0)
+                if (result.Candidates.Length > 0)
                 {
                     var personName = _whitelist.GetPersonNameById(result.Candidates[0].PersonId);
                     Debug.WriteLine("Face ID Confidence: " + Math.Round(result.Candidates[0].Confidence * 100, 1) + "%");
@@ -519,3 +515,4 @@ namespace FacialRecognitionDoor.FacialRecognition
         #endregion
     }
 }
+

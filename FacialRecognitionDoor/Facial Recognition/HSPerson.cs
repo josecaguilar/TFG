@@ -23,9 +23,10 @@ namespace FacialRecognitionDoor.FacialRecognition
 
         public HSPerson(Guid id, string name, string folder)
         {
-            Id      = id;
-            Name    = name;
-            Folder  = folder;
+            Id = id;
+            Name = name;
+            Folder = folder;
         }
     }
 }
+
