@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Newtonsoft.Json.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Security.Authentication.Web;
@@ -17,41 +22,171 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
-
+using System.Diagnostics;
 
 namespace FacialRecognitionDoor
 {
 
     public sealed partial class Login : Page
     {
-        ApplicationDataContainer appSettings = null;
-        //
-        // The Client ID is used by the application to uniquely identify itself to Azure AD.
-        const string clientId = "52757930-fd58-4899-bccc-b076c39a1839";
-        
-        const string tenant = "josecarrillooutlook.onmicrosoft.com";
-        const string authority = "https://login.microsoftonline.com/" + tenant;
-        //const string authority = "organizations";
+        /* ApplicationDataContainer appSettings = null;
+         //
+         // The Client ID is used by the application to uniquely identify itself to Azure AD.
+         const string clientId = "52757930-fd58-4899-bccc-b076c39a1839";
 
-        // To authenticate to the directory Graph, the client needs to know its App ID URI.
-        const string resource = "https://graph.windows.net";
+         const string tenant = "josecarrillooutlook.onmicrosoft.com";
+         const string authority = "https://login.microsoftonline.com/" + tenant;
+         //const string authority = "organizations";
 
-        // Windows10 universal apps require redirect URI in the format below
-        string URI = string.Format("ms-appx-web://Microsoft.AAD.BrokerPlugIn/{0}", WebAuthenticationBroker.GetCurrentApplicationCallbackUri().Host.ToUpper());
+         // To authenticate to the directory Graph, the client needs to know its App ID URI.
+         const string resource = "https://graph.windows.net";
 
-        WebAccountProvider wap = null;
-        WebAccount userAccount = null;
+         // Windows10 universal apps require redirect URI in the format below
+         string URI = string.Format("ms-appx-web://Microsoft.AAD.BrokerPlugIn/{0}", WebAuthenticationBroker.GetCurrentApplicationCallbackUri().Host.ToUpper());
 
+         WebAccountProvider wap = null;
+         WebAccount userAccount = null;*/
+
+        public const string resource = "00000002-0000-0000-c000-000000000000";
+        public const string clientId = "a887edf6-5e76-43e3-8741-c85d7c3fd974";
+
+        private async void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            Search("jlcarrillo", "josecarrillooutlook.onmicrosoft.com");
+        }
         public Login()
         {
             this.InitializeComponent();
             
-            List<UserSearchResult> results = new List<UserSearchResult>();
+            /*List<UserSearchResult> results = new List<UserSearchResult>();
             results.Add(new UserSearchResult());
-            SearchResults.ItemsSource = results;
+            SearchResults.ItemsSource = results;*/
         }
 
+        static void Search(string searchterm, string tenant)
+        {
+            AuthenticationResult ar = GetToken(tenant);
+            if (ar != null)
+            {
+                JObject jResult = null;
+
+                string graphResourceUri = "https://graph.windows.net";
+                string graphApiVersion = "2013-11-08";
+
+                try
+                {
+                    string graphRequest = String.Format(CultureInfo.InvariantCulture, "{0}/{1}/users?api-version={2}&$filter=mailNickname eq '{3}'", graphResourceUri, ar.TenantId, graphApiVersion, searchterm);
+                    HttpClient client = new HttpClient();
+                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, graphRequest);
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", ar.AccessToken);
+                    HttpResponseMessage response = client.SendAsync(request).Result;
+
+                    string content = response.Content.ReadAsStringAsync().Result;
+                    jResult = JObject.Parse(content);
+                }
+                catch (Exception ee)
+                {
+                    //Console.ForegroundColor = ConsoleColor.Red;
+                    Debug.WriteLine("Error on search");
+                    Debug.WriteLine(ee.Message);
+                }
+
+                if (jResult["odata.error"] != null || jResult["value"] == null)
+                {
+                    //Console.ForegroundColor = ConsoleColor.Red;
+                    Debug.WriteLine("Error on search");
+                }
+                //Console.ForegroundColor = ConsoleColor.Green;
+                if (jResult.Count == 0)
+                {
+                    Debug.WriteLine("No user with alias {0} found. (tenantID: {1})", searchterm, ar.TenantId);
+                }
+                else
+                {
+                    Debug.WriteLine("Users found.");
+                    foreach (JObject result in jResult["value"])
+                    {
+                        Debug.WriteLine("-----");
+                        Debug.WriteLine("displayName: {0}", (string)result["displayName"]);
+                        Debug.WriteLine("givenName: {0}", (string)result["givenName"]);
+                        Debug.WriteLine("surname: {0}", (string)result["surname"]);
+                        Debug.WriteLine("userPrincipalName: {0}", (string)result["userPrincipalName"]);
+                        Debug.WriteLine("telephoneNumber: {0}", (string)result["telephoneNumber"] == null ? "Not Listed." : (string)result["telephoneNumber"]);
+                    }
+                }
+            }
+            else
+            {
+                //Console.ForegroundColor = ConsoleColor.Red;
+                Debug.WriteLine("Failed to obtain a token.");
+            }
+        }
+
+        static void ClearCache()
+        {
+            AuthenticationContext ctx = new AuthenticationContext("https://login.microsoftonline.com/common");
+            ctx.TokenCache.Clear();
+            //Console.ForegroundColor = ConsoleColor.Green;
+            Debug.WriteLine("Token cache cleared.");
+        }
+
+        static AuthenticationResult GetToken(string tenant)
+        {
+            AuthenticationContext ctx = null;
+            if (tenant != null)
+                ctx = new AuthenticationContext("https://login.microsoftonline.com/" + tenant);
+            else
+            {
+                ctx = new AuthenticationContext("https://login.microsoftonline.com/common");
+                if (ctx.TokenCache.Count > 0)
+                {
+                    string homeTenant = ctx.TokenCache.ReadItems().First().TenantId;
+                    ctx = new AuthenticationContext("https://login.microsoftonline.com/" + homeTenant);
+                }
+            }
+            AuthenticationResult result = null;
+            try
+            {
+                result = ctx.AcquireTokenSilentAsync(resource, clientId).Result;
+            }
+            catch (Exception exc)
+            {
+                var adalEx = exc.InnerException as AdalException;
+                if ((adalEx != null) && (adalEx.ErrorCode == "failed_to_acquire_token_silently"))
+                {
+                    result = GetTokenViaCode(ctx);
+                }
+                else
+                {
+                    //Console.ForegroundColor = ConsoleColor.Red;
+                    Debug.WriteLine("Something went wrong.");
+                    Debug.WriteLine("Message: " + exc.InnerException.Message + "\n");
+                }
+            }
+            return result;
+
+        }
+        static AuthenticationResult GetTokenViaCode(AuthenticationContext ctx)
+        {
+            AuthenticationResult result = null;
+            try
+            {
+                DeviceCodeResult codeResult = ctx.AcquireDeviceCodeAsync(resource, clientId).Result;
+                //Console.ResetColor();
+                Debug.WriteLine("You need to sign in.");
+                Debug.WriteLine("Message: " + codeResult.Message + "\n");
+                result = ctx.AcquireTokenByDeviceCodeAsync(codeResult).Result;
+            }
+            catch (Exception exc)
+            {
+                //Console.ForegroundColor = ConsoleColor.Red;
+                Debug.WriteLine("Something went wrong.");
+                Debug.WriteLine("Message: " + exc.Message + "\n");
+            }
+            return result;
+        }
+
+        /*
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             wap = await WebAuthenticationCoreManager.FindAccountProviderAsync("https://login.microsoft.com", authority);
@@ -75,8 +210,8 @@ namespace FacialRecognitionDoor
                     }
                     else
                     {                        
-                        // The saved account could not be used for getitng a token
-                        MessageDialog messageDialog = new MessageDialog("We tried to sign you in with the last account you used with this app, but it didn't work out. Please sign in as a different user.");
+                        // The saved account could not be used for getting a token
+                        ContentDialog messageDialog = new ContentDialog("We tried to sign you in with the last account you used with this app, but it didn't work out. Please sign in as a different user.");
                         await messageDialog.ShowAsync();
                         // Make sure that the UX is ready for a new sign in
                         UpdateUXonSignOut();
@@ -186,6 +321,6 @@ namespace FacialRecognitionDoor
                 textSignedIn.Text = "You are not signed in. ";
                 btnSignInOut.Content = "Sign in";
                 SearchResults.ItemsSource = new List<UserSearchResult>();
-        }        
+        }     */
     }
 }

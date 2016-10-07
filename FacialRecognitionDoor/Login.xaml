@@ -22,11 +22,7 @@
         <StackPanel Grid.Row="0" Margin="20,20,0,0">
             <TextBlock Text="Directory Search" Margin="0,0,0,0" Style="{ThemeResource HeaderTextBlockStyle}" />
         </StackPanel>
-
-        <StackPanel Grid.Row="1" Orientation="Horizontal"  Margin="20,20,20,20" BorderBrush="Gray" >
-            <TextBlock x:Name="textSignedIn">No ha iniciado sesión.</TextBlock>
-            <HyperlinkButton x:Name="btnSignInOut" Click="btnSignInOut_Click" Padding="0">Iniciar sesión</HyperlinkButton>
-        </StackPanel>
+        
         <!--Search Box-->
         <Grid Grid.Row="2" x:Name="SearchRoot" Margin="20,20,20,0">
             <Grid.RowDefinitions>
@@ -39,38 +35,10 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBox Grid.Column="0" x:Name="SearchTermText" VerticalAlignment="Center" PlaceholderText="Introduzca un Alias"></TextBox>
-                <Button Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="btnSearch" Click="btnSearch_Click" Width="100" IsEnabled="False">Buscar</Button>
+                <Button Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="btnSearch" Click="btnSearch_Click" Width="100">Buscar</Button>
             </Grid>
-            <TextBlock x:Name="StatusResult" Grid.Row="1" FontSize="20" TextWrapping="Wrap" Margin="10" HorizontalAlignment="Center" Foreground="Green" />
+  
         </Grid>
-
-        <!--Search Results-->
-        <GridView x:Name="SearchResults" Grid.Row="3" Margin="0,0,0,0">
-            <GridView.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="0" Grid.Row="0" FontSize="24" TextWrapping="Wrap" Margin="10" HorizontalAlignment="Right">First Name:</TextBlock>
-                        <TextBlock Grid.Column="0" Grid.Row="1" FontSize="24" TextWrapping="Wrap" Margin="10" HorizontalAlignment="Right">Last Name:</TextBlock>
-                        <TextBlock Grid.Column="0" Grid.Row="2" FontSize="24" TextWrapping="Wrap" Margin="10" HorizontalAlignment="Right">UPN:</TextBlock>
-                        <TextBlock Grid.Column="0" Grid.Row="3" FontSize="24" TextWrapping="Wrap" Margin="10" HorizontalAlignment="Right" >Phone:</TextBlock>
-                        <TextBlock Grid.Column="1" Grid.Row="0" FontSize="24" TextWrapping="Wrap" Margin="10" HorizontalAlignment="Left" Text="{Binding givenName}"/>
-                        <TextBlock Grid.Column="1" Grid.Row="1" FontSize="24" TextWrapping="Wrap" Margin="10" HorizontalAlignment="Left" Text="{Binding surname}"/>
-                        <TextBlock Grid.Column="1" Grid.Row="2" FontSize="24" TextWrapping="Wrap" Margin="10" HorizontalAlignment="Left" Text="{Binding userPrincipalName}"/>
-                        <TextBlock Grid.Column="1" Grid.Row="3" FontSize="24" TextWrapping="Wrap" Margin="10" HorizontalAlignment="Left" Text="{Binding telephoneNumber}"/>
-                    </Grid>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
 
     </Grid>
 </Page>
