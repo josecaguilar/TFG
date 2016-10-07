@@ -49,10 +49,19 @@ namespace FacialRecognitionDoor
 
         public const string resource = "00000002-0000-0000-c000-000000000000";
         public const string clientId = "a887edf6-5e76-43e3-8741-c85d7c3fd974";
+        public static bool ok = false;
 
         private async void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            Search("jlcarrillo", "josecarrillooutlook.onmicrosoft.com");
+            Search(SearchTermText.Text, "josecarrillooutlook.onmicrosoft.com");
+            ClearCache();
+            if (ok)
+            {
+                Frame.Navigate(typeof(MainPage));
+            }else
+            {
+                //El usuario no se encuentra
+            }
         }
         public Login()
         {
@@ -100,10 +109,12 @@ namespace FacialRecognitionDoor
                 if (jResult.Count == 0)
                 {
                     Debug.WriteLine("No user with alias {0} found. (tenantID: {1})", searchterm, ar.TenantId);
+                    ok = false;
                 }
                 else
                 {
                     Debug.WriteLine("Users found.");
+                    ok = true;
                     foreach (JObject result in jResult["value"])
                     {
                         Debug.WriteLine("-----");
