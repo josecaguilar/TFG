@@ -23,10 +23,11 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
+using FacialRecognitionDoor.Helpers;
 
 namespace FacialRecognitionDoor
 {
-
+    
     public sealed partial class Login : Page
     {
         /* ApplicationDataContainer appSettings = null;
@@ -47,12 +48,15 @@ namespace FacialRecognitionDoor
          WebAccountProvider wap = null;
          WebAccount userAccount = null;*/
 
+       // private WebcamHelper webcam;
         public const string resource = "00000002-0000-0000-c000-000000000000";
         public const string clientId = "a887edf6-5e76-43e3-8741-c85d7c3fd974";
-        public static bool ok = false;
+        public bool ok = false;
 
-        private async void btnSearch_Click(object sender, RoutedEventArgs e)
+        private void btnSearch_Click(object sender, RoutedEventArgs e) //async void
         {
+            // Stops camera preview on this page, so that it can be started on NewUserPage
+            //await webcam.StopCameraPreview();
             Search(SearchTermText.Text, "josecarrillooutlook.onmicrosoft.com");
             ClearCache();
             if (ok)
@@ -61,6 +65,7 @@ namespace FacialRecognitionDoor
             }else
             {
                 //El usuario no se encuentra
+                Debug.WriteLine("El usuario no se encuentra en AD");
             }
         }
         public Login()
@@ -72,7 +77,7 @@ namespace FacialRecognitionDoor
             SearchResults.ItemsSource = results;*/
         }
 
-        static void Search(string searchterm, string tenant)
+        private void Search(string searchterm, string tenant) //static void Search
         {
             AuthenticationResult ar = GetToken(tenant);
             if (ar != null)
