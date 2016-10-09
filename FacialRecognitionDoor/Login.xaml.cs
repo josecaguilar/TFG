@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
 using FacialRecognitionDoor.Helpers;
+using System.Threading.Tasks;
 
 namespace FacialRecognitionDoor
 {
@@ -57,21 +58,25 @@ namespace FacialRecognitionDoor
         {
             // Stops camera preview on this page, so that it can be started on NewUserPage
             //await webcam.StopCameraPreview();
-            Search(SearchTermText.Text, "josecarrillooutlook.onmicrosoft.com");
+            
             ClearCache();
+            Search("jlcarrillo", "josecarrillooutlook.onmicrosoft.com");//SearchTermText.Text, "josecarrillooutlook.onmicrosoft.com");
+
+            PrintCache();
             if (ok)
             {
                 Frame.Navigate(typeof(MainPage));
-            }else
+            }
+            else
             {
                 //El usuario no se encuentra
-                Debug.WriteLine("El usuario no se encuentra en AD");
+                Debug.WriteLine("El usuario no se encuentra en Azure AD");
             }
         }
         public Login()
         {
             this.InitializeComponent();
-            
+
             /*List<UserSearchResult> results = new List<UserSearchResult>();
             results.Add(new UserSearchResult());
             SearchResults.ItemsSource = results;*/
@@ -103,6 +108,7 @@ namespace FacialRecognitionDoor
                     //Console.ForegroundColor = ConsoleColor.Red;
                     Debug.WriteLine("Error on search");
                     Debug.WriteLine(ee.Message);
+                    //ok = false;
                 }
 
                 if (jResult["odata.error"] != null || jResult["value"] == null)
@@ -114,21 +120,21 @@ namespace FacialRecognitionDoor
                 if (jResult.Count == 0)
                 {
                     Debug.WriteLine("No user with alias {0} found. (tenantID: {1})", searchterm, ar.TenantId);
-                    ok = false;
                 }
                 else
                 {
-                    Debug.WriteLine("Users found.");
-                    ok = true;
-                    foreach (JObject result in jResult["value"])
+                    //Debug.WriteLine("Users found.");
+
+                    /*foreach (JObject result in jResult["value"])
                     {
+                        //ok = true;
                         Debug.WriteLine("-----");
                         Debug.WriteLine("displayName: {0}", (string)result["displayName"]);
                         Debug.WriteLine("givenName: {0}", (string)result["givenName"]);
                         Debug.WriteLine("surname: {0}", (string)result["surname"]);
                         Debug.WriteLine("userPrincipalName: {0}", (string)result["userPrincipalName"]);
                         Debug.WriteLine("telephoneNumber: {0}", (string)result["telephoneNumber"] == null ? "Not Listed." : (string)result["telephoneNumber"]);
-                    }
+                    }*/
                 }
             }
             else
@@ -146,7 +152,50 @@ namespace FacialRecognitionDoor
             Debug.WriteLine("Token cache cleared.");
         }
 
-        static AuthenticationResult GetToken(string tenant)
+        private void PrintCache() //static void
+        {
+            AuthenticationContext ctx = new AuthenticationContext("https://login.microsoftonline.com/common");
+            var cacheContent = ctx.TokenCache.ReadItems();
+            string sub="";
+            //Console.ForegroundColor = ConsoleColor.Green;
+            if (cacheContent.Count() > 0)
+            {
+                //Debug.WriteLine("{0,-30} | {1,-15}", "UPN", "TenantId");
+                //Debug.WriteLine("-----------------------------------------------------------------");
+                foreach (TokenCacheItem tci in cacheContent)
+                {
+
+                    sub = tci.DisplayableId;
+                    Debug.WriteLine("{0,-30} | {1,-15}  ", tci.DisplayableId, tci.TenantId);
+                   
+                }
+                //Debug.WriteLine("-----------------------------------------------------------------");
+            }
+            else { Debug.WriteLine("The cache is empty."); }
+
+            sub = sub.Substring(sub.IndexOf('@') + 1);
+            if (sub == "josecarrillooutlook.onmicrosoft.com" || sub == "outlook.com")
+            {
+                ok = true;
+            }
+            else
+            {
+                ok = false;
+            }
+        }
+
+        public void TestPostMessage(string message)
+        {
+            string urlWithAccessToken = GeneralConstants.SlackURI;
+        
+            SlackClient client = new SlackClient(urlWithAccessToken);
+
+            client.PostMessage(username: "IronDoor",
+                       text: "IronDoor 1: "+message,
+                       channel: "#login");
+        }
+
+        private AuthenticationResult GetToken(string tenant) //static
         {
             AuthenticationContext ctx = null;
             if (tenant != null)
@@ -182,15 +231,18 @@ namespace FacialRecognitionDoor
             return result;
 
         }
-        static AuthenticationResult GetTokenViaCode(AuthenticationContext ctx)
+        
+        private AuthenticationResult GetTokenViaCode(AuthenticationContext ctx) //static
         {
             AuthenticationResult result = null;
             try
             {
                 DeviceCodeResult codeResult = ctx.AcquireDeviceCodeAsync(resource, clientId).Result;
                 //Console.ResetColor();
+                TestPostMessage(codeResult.Message);
                 Debug.WriteLine("You need to sign in.");
                 Debug.WriteLine("Message: " + codeResult.Message + "\n");
+                
                 result = ctx.AcquireTokenByDeviceCodeAsync(codeResult).Result;
             }
             catch (Exception exc)

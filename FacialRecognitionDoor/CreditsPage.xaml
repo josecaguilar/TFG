@@ -28,7 +28,7 @@
             <Run Text="E.T.S.I.T. UMA"/>
             <Run Text=" 2016"/>
         </TextBlock>
-        <Image x:Name="Assets_UMA_jpg" Margin="484,170,534,272" Source="Assets/UMA.jpg" Stretch="Fill" RenderTransformOrigin="0.621,1.254"/>
+        <Image x:Name="Assets_UMA_jpg" Margin="556,180,491,262" Source="Assets/UMA.jpg" Stretch="Fill" RenderTransformOrigin="0.621,1.254"/>
     </Grid>
 </Page>
 

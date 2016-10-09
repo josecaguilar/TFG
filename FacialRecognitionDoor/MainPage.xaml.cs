@@ -300,12 +300,23 @@ namespace FacialRecognitionDoor
         {
             // Greet visitor
             await speech.Read(SpeechContants.GeneralGreetigMessage(visitorName));
+            TestPostMessage(visitorName);
 
             if(gpioAvailable)
             {
                 // Unlock door for specified ammount of time
                 gpioHelper.UnlockDoor();
             }
+        }
+        public void TestPostMessage(string message)
+        {
+            string urlWithAccessToken = GeneralConstants.SlackURI;
+
+            SlackClient client = new SlackClient(urlWithAccessToken);
+
+            client.PostMessage(username: "IronDoor",
+                       text: message +" ha entrado por IronDoor",
+                       channel: "#status");
         }
 
         /// <summary>
@@ -384,7 +395,7 @@ namespace FacialRecognitionDoor
         /// <summary>
         /// Called when user hits vitual add user button. Navigates to NewUserPage page.
         /// </summary>
-        private async void LoginButton_Click(object sender, RoutedEventArgs e)
+        private async void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
             // Stops camera preview on this page, so that it can be started on NewUserPage
             await webcam.StopCameraPreview();

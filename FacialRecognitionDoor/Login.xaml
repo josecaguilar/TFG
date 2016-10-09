@@ -29,12 +29,11 @@
                 <RowDefinition Height="80" />
                 <RowDefinition Height="40" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" x:Name="searchRow">
-                <TextBox Grid.Column="0" x:Name="SearchTermText" VerticalAlignment="Center" HorizontalAlignment="Center" PlaceholderText="Introduzca su Alias"></TextBox>
-            </Grid>
-            <Button Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="btnSearch" Click="btnSearch_Click" Width="100">Login</Button>
+            
+            <Button Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="btnSearch" Click="btnSearch_Click" Width="100">Login</Button>
+            
         </Grid>
 
-        <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">Para iniciar sesión, debe entrar con su móvil o PC en: https://aka.ms/devicelogin e ingrese el código c para autenticar.</TextBlock>
+        <TextBlock Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" x:Name="SignIn" Text="Hola"></TextBlock>
     </Grid>
 </Page>

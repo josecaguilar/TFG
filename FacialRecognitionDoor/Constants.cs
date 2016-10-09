@@ -6,7 +6,7 @@
     public static class GeneralConstants
     {
         // This variable should be set to false for devices, unlike the Raspberry Pi, that have GPU support
-        public const bool DisableLiveCameraFeed = true; //Modificar para habilitar Webcam en PC
+        public const bool DisableLiveCameraFeed = false; //False para habilitar Webcam en PC
 
         // Oxford Face API Primary should be entered here
         // You can obtain a subscription key for Face API by following the instructions here: https://www.microsoft.com/cognitive-services/en-us/sign-up
@@ -14,6 +14,9 @@
         
         // Name of the folder in which all Whitelist data is stored
         public const string WhiteListFolderName = "Facial Recognition Door Whitelist";
+
+        //Slack URI with token
+        public const string SlackURI = "https://hooks.slack.com/services/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";
 
     }
 

@@ -60,7 +60,7 @@
     </Grid>
     <Page.BottomAppBar>
         <CommandBar IsOpen="True" IsSticky="True" IsEnabled="True" Foreground="#FF7C3C3C">
-            <AppBarButton x:Name="Iniciar" Label="Iniciar sesión" Icon="AddFriend" Foreground="#FFFFFFFF" Width="64" Click="LoginButton_Click"/>
+            <AppBarButton x:Name="SignOut" Label="Cerrar sesión" Icon="OtherUser" Foreground="#FFFFFFFF" Width="64" Click="SignOutButton_Click"/>
             <AppBarButton x:Name="NewUserButton" Label="Agregar usuario" Icon="Add" Foreground="#FFFFFFFF" Width="64" Click="NewUserButton_Click"/>
             <AppBarButton x:Name="DoorbellButton" Label="Acceder" Foreground="#FFFFFFFF" Width="64" Click="DoorbellButton_Click">
                 <AppBarButton.Icon>
