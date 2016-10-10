@@ -37,15 +37,15 @@
                 <ColumnDefinition Width=".6*" />
             </Grid.ColumnDefinitions>
             <TextBox x:Name="UserNameBox" Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="32" Margin="20,0" PlaceholderText="Photo ID Name (ex: John Doe)"/>
-            <Button x:Name="ConfirmButton" Content="Confirm" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
-            <Button x:Name="CancelButton" Content="Cancel" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+            <Button x:Name="ConfirmButton" Content="Confirmar" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+            <Button x:Name="CancelButton" Content="Cancelar" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
         </Grid>
         <GridView x:Name="PhotoGrid" Grid.Row="1" Grid.Column="1" Loaded="PhotoGrid_Loaded"/>
     </Grid>
     <Page.BottomAppBar>
         <CommandBar IsOpen="True" IsSticky="True" IsEnabled="True" Foreground="#FF7C3C3C" RequestedTheme="Dark">
             <AppBarButton x:Name="AddButton" Label="Agregar Foto" Icon="Add" Foreground="#FFFFFFFF" Width="64" Tapped="AddButton_Tapped"/>
-            <AppBarButton x:Name="DeleteButton" Label="Eliminar Usuario" Icon="Delete" Foreground="#FFFFFFFF" Width="64" Tapped="DeleteButton_Tapped"/>
+            <AppBarButton x:Name="DeleteButton" Label="Eliminar Fotografías" Icon="Delete" Foreground="#FFFFFFFF" Width="64" Tapped="DeleteButton_Tapped"/>
             <AppBarButton x:Name="HomeButton" Label="Inicio" Icon="Home" Foreground="#FFFFFFFF" Width="64" Tapped="HomeButton_Tapped"/>
         </CommandBar>
     </Page.BottomAppBar>

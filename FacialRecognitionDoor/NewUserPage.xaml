@@ -24,7 +24,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Button x:Name="BackButton" Content="Atrás" Grid.Column="0" HorizontalAlignment="Center" Margin="0,32,0,0"  VerticalAlignment="Top" FontSize="32" Click="BackButton_Click"/>
+        <Button x:Name="BackButton" Content="Atrás" Grid.Column="0" HorizontalAlignment="Center" Margin="0,32,0,0"  VerticalAlignment="Top" FontSize="20" Click="BackButton_Click"/>
         
         <StackPanel Margin="0, 10" Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <CaptureElement x:Name='WebcamFeed' Loaded="WebcamFeed_Loaded" Visibility="Collapsed"/>
@@ -39,7 +39,7 @@
             <Image x:Name="image" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Assets/CameraIcon.png" Margin="75"/>
             <TextBlock x:Name="DisabledText" TextWrapping="Wrap" Text="La cámara en directo ha sido deshabilitada debido a limitaciones en el hardware." HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1" FontSize="33.333" TextAlignment="Center" Margin="10,0"/>
         </Grid>
-        <Button x:Name="CaptureButton" Content="Capturar Fotografía" Grid.Column="1" HorizontalAlignment="Center" Margin="0" Grid.Row="1" VerticalAlignment="Center" Click="Capture_Click" FontSize="32"/>
+        <Button x:Name="CaptureButton" Content="Capturar Fotografía" Grid.Column="1" HorizontalAlignment="Center" Margin="0" Grid.Row="1" VerticalAlignment="Center" Click="Capture_Click" FontSize="20"/>
 
         <Grid x:Name="UserNameGrid" Grid.Column="1" Grid.Row="1" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
@@ -48,8 +48,8 @@
                 <ColumnDefinition Width=".6*" />
             </Grid.ColumnDefinitions>
           <!--  <TextBox x:Name="UserNameBox" Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="32" Margin="20,0" PlaceholderText="Photo ID Name (ex: John Doe)"/> -->
-            <Button x:Name="ConfirmButton" Content="Confirmar" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Click="ConfirmButton_Click"/>
-            <Button x:Name="CancelButton" Content="Cancelar" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Click="CancelButton_Click"/>
+            <Button x:Name="ConfirmButton" Content="Confirmar" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Click="ConfirmButton_Click"/>
+            <Button x:Name="CancelButton" Content="Cancelar" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Click="CancelButton_Click"/>
         </Grid>
     </Grid>
 </Page>

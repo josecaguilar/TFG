@@ -89,12 +89,12 @@ namespace FacialRecognitionDoor.Helpers
         /// <summary>
         /// Accepts the name of a visitor. Removes them from whitelist.
         /// </summary>
-        public async static void RemoveUserFromWhitelist(string name)
+        public static void RemoveUserFromWhitelist(string name) //async
         {
             // Acquires instance of Oxford SDK controller
             FaceApiRecognizer sdkController = FaceApiRecognizer.Instance;
             // Asynchronously remove user from whitelist
-            await sdkController.RemovePersonFromWhitelistAsync(name);
+            sdkController.RemovePersonFromWhitelistAsync(name); //await
         }
 
         /// <summary>
