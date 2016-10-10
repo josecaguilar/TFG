@@ -27,7 +27,8 @@ namespace FacialRecognitionDoor.Helpers
                 return false;
             }
 
-            // Opens the GPIO pin that interacts with the doorbel button
+            //If we want to add doorbel to our IronDoor project:
+            /*// Opens the GPIO pin that interacts with the doorbel button
             doorbellPin = gpioController.OpenPin(GpioConstants.ButtonPinID);
 
             if (doorbellPin == null)
@@ -48,7 +49,7 @@ namespace FacialRecognitionDoor.Helpers
             {
                 // MBM does not support PullUp as it does not have built in pull-up resistors 
                 doorbellPin.SetDriveMode(GpioPinDriveMode.Input);
-            }
+            }*/
 
             // Opens the GPIO pin that interacts with the door lock system
             doorLockPin = gpioController.OpenPin(GpioConstants.DoorLockPinID);
@@ -59,20 +60,21 @@ namespace FacialRecognitionDoor.Helpers
             }
             // Sets doorbell pin drive mode to output as pin will be used to output information to lock
             doorLockPin.SetDriveMode(GpioPinDriveMode.Output);
-            // Initializes pin to high voltage. This locks the door. 
-            doorLockPin.Write(GpioPinValue.High);
+            // Initializes pin to low voltage. This locks the door. 
+            doorLockPin.Write(GpioPinValue.Low);
 
             //Initialization was successfull, return true
             return true;
         }
 
-        /// <summary>
+        //If we want to add doorbel to our IronDoor project:
+        /*/// <summary>
         /// Returns the GpioPin that handles the doorbell button. Intended to be used in order to setup event handler when user pressed Doorbell.
         /// </summary>
         public GpioPin GetDoorBellPin()
         {
             return doorbellPin;
-        }
+        }*/
 
         /// <summary>
         /// Unlocks door for time specified in GpioConstants class
@@ -80,11 +82,11 @@ namespace FacialRecognitionDoor.Helpers
         public async void UnlockDoor()
         {
             // Unlock door
-            doorLockPin.Write(GpioPinValue.Low);
+            doorLockPin.Write(GpioPinValue.High);
             // Wait for specified length
             await Task.Delay(TimeSpan.FromSeconds(GpioConstants.DoorLockOpenDurationSeconds));
             // Lock door
-            doorLockPin.Write(GpioPinValue.High);
+            doorLockPin.Write(GpioPinValue.Low);
         }
 
     }

@@ -6,7 +6,7 @@
     public static class GeneralConstants
     {
         // This variable should be set to false for devices, unlike the Raspberry Pi, that have GPU support
-        public const bool DisableLiveCameraFeed = false; //False para habilitar Webcam en PC
+        public const bool DisableLiveCameraFeed = true; //False para habilitar Webcam en PC
 
         // Oxford Face API Primary should be entered here
         // You can obtain a subscription key for Face API by following the instructions here: https://www.microsoft.com/cognitive-services/en-us/sign-up
@@ -41,8 +41,9 @@
     /// </summary>
     public static class GpioConstants
     {
+        //If we want to add doorbel to our IronDoor project:
         // The GPIO pin that the doorbell button is attached to
-        public const int ButtonPinID = 5;
+        //public const int ButtonPinID = 5;
 
         // The GPIO pin that the door lock is attached to
         public const int DoorLockPinID = 4;
