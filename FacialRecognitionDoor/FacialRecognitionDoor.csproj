@@ -128,6 +128,7 @@
     </Compile>
     <Compile Include="Objects\UserProfileObject.cs" />
     <Compile Include="Objects\Visitor.cs" />
+    <Compile Include="PrintCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlackClient.cs" />
     <Compile Include="UserProfilePage.xaml.cs">

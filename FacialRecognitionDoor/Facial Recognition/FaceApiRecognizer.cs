@@ -483,6 +483,17 @@ namespace FacialRecognitionDoor.FacialRecognition
         }
         #endregion
 
+        public void TestPostMessage(string message, int confidence)
+        {
+            string urlWithAccessToken = GeneralConstants.SlackURI;
+
+            SlackClient client = new SlackClient(urlWithAccessToken);
+
+            client.PostMessage(username: "IronDoor",
+                       text: message + " ha entrado por IronDoor con una confianza del "+confidence+" %",
+                       channel: "#status");
+        }
+
         #region Face recognition
         public async Task<List<string>> FaceRecognizeAsync(StorageFile imageFile)
         {
@@ -505,11 +516,13 @@ namespace FacialRecognitionDoor.FacialRecognition
                 if (result.Candidates.Length > 0)
                 {
                     var personName = _whitelist.GetPersonNameById(result.Candidates[0].PersonId);
-                    Debug.WriteLine("Face ID Confidence: " + Math.Round(result.Candidates[0].Confidence * 100, 1) + "%");
+                    //Debug.WriteLine("Face ID Confidence: " + Math.Round(result.Candidates[0].Confidence * 100, 1) + "%");
                     recogResult.Add(personName);
+                    int confianza = (int)Math.Round(result.Candidates[0].Confidence * 100, 1);
+                    TestPostMessage(personName, confianza);
                 }
             }
-
+            
             return recogResult;
         }
         #endregion

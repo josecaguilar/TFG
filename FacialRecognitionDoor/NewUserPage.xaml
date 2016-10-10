@@ -47,9 +47,9 @@
                 <ColumnDefinition Width=".75*" />
                 <ColumnDefinition Width=".6*" />
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="UserNameBox" Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="32" Margin="20,0" PlaceholderText="Photo ID Name (ex: John Doe)"/>
-            <Button x:Name="ConfirmButton" Content="Confirm" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Click="ConfirmButton_Click"/>
-            <Button x:Name="CancelButton" Content="Cancel" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Click="CancelButton_Click"/>
+          <!--  <TextBox x:Name="UserNameBox" Grid.Column="0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="32" Margin="20,0" PlaceholderText="Photo ID Name (ex: John Doe)"/> -->
+            <Button x:Name="ConfirmButton" Content="Confirmar" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Click="ConfirmButton_Click"/>
+            <Button x:Name="CancelButton" Content="Cancelar" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Click="CancelButton_Click"/>
         </Grid>
     </Grid>
 </Page>

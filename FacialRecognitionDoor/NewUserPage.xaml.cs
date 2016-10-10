@@ -97,22 +97,31 @@ namespace FacialRecognitionDoor
             photoStream.Dispose();
         }
 
+        public string subalias()
+        {
+            PrintCache printed = new PrintCache();
+            string alias = printed.Cache();
+            alias = alias.Substring(0, alias.LastIndexOf("@"));
+            return alias;
+        }
+
         /// <summary>
         /// Triggered when the Confirm photo button is clicked by the user. Stores the captured photo to storage and navigates back to MainPage.
         /// </summary>
         private async void ConfirmButton_Click(object sender, RoutedEventArgs e)
         {
-            if(!string.IsNullOrWhiteSpace(UserNameBox.Text))
+            string alias = subalias();
+            if (!string.IsNullOrWhiteSpace(alias)) //UserNameBox.Text
             {
                 // Create or open the folder in which the Whitelist is stored
                 StorageFolder whitelistFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync(GeneralConstants.WhiteListFolderName, CreationCollisionOption.OpenIfExists);
                 // Create a folder to store this specific user's photos
-                StorageFolder currentFolder = await whitelistFolder.CreateFolderAsync(UserNameBox.Text, CreationCollisionOption.ReplaceExisting);
+                StorageFolder currentFolder = await whitelistFolder.CreateFolderAsync(alias, CreationCollisionOption.ReplaceExisting);
                 // Move the already captured photo the user's folder
                 await currentIdPhotoFile.MoveAsync(currentFolder);
                 
                 // Add user to Oxford database
-                OxfordFaceAPIHelper.AddUserToWhitelist(UserNameBox.Text, currentFolder);
+                OxfordFaceAPIHelper.AddUserToWhitelist(alias, currentFolder);
 
                 // Stop live camera feed
                 await webcam.StopCameraPreview();
@@ -129,7 +138,7 @@ namespace FacialRecognitionDoor
             // Collapse the confirm photo buttons and open the capture photo button.
             CaptureButton.Visibility = Visibility.Visible;
             UserNameGrid.Visibility = Visibility.Collapsed;
-            UserNameBox.Text = "";
+            //UserNameBox.Text = "";
 
             // Open the webcam feed or disabled camera feed
             if(GeneralConstants.DisableLiveCameraFeed)

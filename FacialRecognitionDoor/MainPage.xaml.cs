@@ -300,23 +300,12 @@ namespace FacialRecognitionDoor
         {
             // Greet visitor
             await speech.Read(SpeechContants.GeneralGreetigMessage(visitorName));
-            TestPostMessage(visitorName);
-
+            
             if(gpioAvailable)
             {
                 // Unlock door for specified ammount of time
                 gpioHelper.UnlockDoor();
             }
-        }
-        public void TestPostMessage(string message)
-        {
-            string urlWithAccessToken = GeneralConstants.SlackURI;
-
-            SlackClient client = new SlackClient(urlWithAccessToken);
-
-            client.PostMessage(username: "IronDoor",
-                       text: message +" ha entrado por IronDoor",
-                       channel: "#status");
         }
 
         /// <summary>

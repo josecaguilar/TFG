@@ -17,7 +17,7 @@
 
         //Slack URI with token
         public const string SlackURI = "https://hooks.slack.com/services/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";
-
+        
     }
 
     /// <summary>
