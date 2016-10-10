@@ -10,7 +10,7 @@ namespace FacialRecognitionDoor.Helpers
     public class GpioHelper
     {
         private GpioController gpioController;
-        private GpioPin doorbellPin;
+        //private GpioPin doorbellPin; //If we want to add doorbell to our IronDoor project uncomment
         private GpioPin doorLockPin;
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace FacialRecognitionDoor.Helpers
                 return false;
             }
 
-            //If we want to add doorbel to our IronDoor project:
+            //If we want to add doorbell to our IronDoor project uncomment
             /*// Opens the GPIO pin that interacts with the doorbel button
             doorbellPin = gpioController.OpenPin(GpioConstants.ButtonPinID);
 
@@ -67,7 +67,7 @@ namespace FacialRecognitionDoor.Helpers
             return true;
         }
 
-        //If we want to add doorbel to our IronDoor project:
+        //If we want to add doorbell to our IronDoor project uncomment
         /*/// <summary>
         /// Returns the GpioPin that handles the doorbell button. Intended to be used in order to setup event handler when user pressed Doorbell.
         /// </summary>
