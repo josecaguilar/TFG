@@ -51,7 +51,7 @@ namespace FacialRecognitionDoor
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            ClearCache();
+            //ClearCache();
             Search("jlcarrillo", "josecarrillooutlook.onmicrosoft.com");
             PrintCache();
             if (ok)
@@ -60,9 +60,8 @@ namespace FacialRecognitionDoor
             }
             else
             {
-                //El usuario no se encuentra
-                //Debug.WriteLine("El usuario no se encuentra en Azure AD");
-                ForgetPassword.Text = "El usuario no se encuentra en Azure AD, si ha olvidado su contraseña, póngase en contacto con el equipo de IT de IronDoor";
+                //User not found
+                ForgetPassword.Text = "El usuario no se encuentra en Azure Active Directory";
             }
         }
         public Login()
