@@ -28,19 +28,6 @@ namespace FacialRecognitionDoor
             else { Debug.WriteLine("The cache is empty."); }
 
             return emailsigned;
-
-           /* sub = sub.Substring(sub.IndexOf('@') + 1);
-            if (sub == "josecarrillooutlook.onmicrosoft.com" || sub == "outlook.com")
-            {
-                ok = true;
-            }
-            else
-            {
-                ok = false;
-            }
-
-            alias = alias.Substring(0, alias.LastIndexOf("@"));
-            Debug.WriteLine(alias);*/
         }
     }
 

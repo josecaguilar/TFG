@@ -31,7 +31,7 @@ namespace FacialRecognitionDoor
     public sealed partial class Login : Page
     {
         public const string resource = "00000002-0000-0000-c000-000000000000";
-        public const string clientId = "a887edf6-5e76-43e3-8741-c85d7c3fd974";
+        public const string clientId = "731c53ea-3042-4f8d-8da3-a8fcad30fa85";
         public bool ok = false;
         
         public void PrintCache()
@@ -39,7 +39,7 @@ namespace FacialRecognitionDoor
             PrintCache printed = new PrintCache();
             string sub = printed.Cache();
             sub = sub.Substring(sub.IndexOf('@') + 1);
-            if (sub == "josecarrillooutlook.onmicrosoft.com" || sub == "outlook.com")
+            if (sub == "irondoor.onmicrosoft.com")
             {
                 ok = true;
             }
@@ -51,8 +51,8 @@ namespace FacialRecognitionDoor
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            //ClearCache();
-            Search("jlcarrillo", "josecarrillooutlook.onmicrosoft.com");
+            ClearCache();
+            Search("jlcarrillo", "irondoor.onmicrosoft.com");
             PrintCache();
             if (ok)
             {

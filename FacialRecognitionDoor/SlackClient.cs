@@ -29,7 +29,6 @@ public class SlackClient
 			Username = username,
 			Text = text
 		};
-		
 		PostMessage(payload);
 	}
 
@@ -42,19 +41,6 @@ public class SlackClient
         var client = new HttpClient();
         uri = new Uri(GeneralConstants.SlackURI);
         await client.PostAsync(uri, content);
-
-        /*var client = new HttpClient();
-
-		using (WebClient client = new HttpClient();
-        {
-			NameValueCollection data = new NameValueCollection();
-			data["payload"] = payloadJson;
-	
-			var response = client.UploadValues(_uri, "POST", data);
-			
-			//The response text is usually "ok"
-			string responseText = _encoding.GetString(response);
-		}*/
     }
 }
 
