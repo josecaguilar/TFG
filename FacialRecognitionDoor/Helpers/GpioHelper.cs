@@ -10,7 +10,7 @@ namespace FacialRecognitionDoor.Helpers
     public class GpioHelper
     {
         private GpioController gpioController;
-        //private GpioPin doorbellPin; //If we want to add doorbell to our IronDoor project uncomment
+        private GpioPin doorbellPin;
         private GpioPin doorLockPin;
 
         /// <summary>
@@ -27,8 +27,7 @@ namespace FacialRecognitionDoor.Helpers
                 return false;
             }
 
-            //If we want to add doorbell to our IronDoor project uncomment
-            /*// Opens the GPIO pin that interacts with the doorbel button
+            // Opens the GPIO pin that interacts with the doorbel button
             doorbellPin = gpioController.OpenPin(GpioConstants.ButtonPinID);
 
             if (doorbellPin == null)
@@ -49,7 +48,7 @@ namespace FacialRecognitionDoor.Helpers
             {
                 // MBM does not support PullUp as it does not have built in pull-up resistors 
                 doorbellPin.SetDriveMode(GpioPinDriveMode.Input);
-            }*/
+            }
 
             // Opens the GPIO pin that interacts with the door lock system
             doorLockPin = gpioController.OpenPin(GpioConstants.DoorLockPinID);
@@ -67,14 +66,13 @@ namespace FacialRecognitionDoor.Helpers
             return true;
         }
 
-        //If we want to add doorbell to our IronDoor project uncomment
-        /*/// <summary>
+        /// <summary>
         /// Returns the GpioPin that handles the doorbell button. Intended to be used in order to setup event handler when user pressed Doorbell.
         /// </summary>
         public GpioPin GetDoorBellPin()
         {
             return doorbellPin;
-        }*/
+        }
 
         /// <summary>
         /// Unlocks door for time specified in GpioConstants class

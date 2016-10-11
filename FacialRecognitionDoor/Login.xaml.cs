@@ -51,7 +51,7 @@ namespace FacialRecognitionDoor
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            //ClearCache();
+            ClearCache();
             Search("jlcarrillo", "irondoor.onmicrosoft.com");
             PrintCache();
             if (ok)

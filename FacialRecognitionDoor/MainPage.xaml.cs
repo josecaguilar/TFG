@@ -118,12 +118,11 @@ namespace FacialRecognitionDoor
                 Debug.WriteLine("GPIO controller not available.");
             }
 
-            //If we want to add doorbell to our IronDoor project uncomment
-            /*// If initialization was successfull, attach doorbell pressed event handler
+            // If initialization was successfull, attach doorbell pressed event handler
             if (gpioAvailable)
             {
                 gpioHelper.GetDoorBellPin().ValueChanged += DoorBellPressed;
-            }*/
+            }
         }
 
         /// <summary>

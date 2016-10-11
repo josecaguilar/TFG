@@ -41,9 +41,8 @@
     /// </summary>
     public static class GpioConstants
     {
-        //If we want to add doorbell to our IronDoor project uncomment
         // The GPIO pin that the doorbell button is attached to
-        //public const int ButtonPinID = 5;
+        public const int ButtonPinID = 5;
 
         // The GPIO pin that the door lock is attached to
         public const int DoorLockPinID = 4;
