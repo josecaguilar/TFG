@@ -26,8 +26,21 @@ static class AzureIoTHub
 #if WINDOWS_UWP
         //Original String from AzureIoTHub Nuget Package
         //var str = "Hello, Cloud from a UWP C# app!";
+        var date = DateTime.Now;
+        var year = date.Year;
+        var month = date.Month;
+        var day = date.Day;
+        var hora = date.Hour;
+        var minutes = date.Minute;
+        var seconds = date.Second;
+        string tiempo = hora.ToString()+":"+minutes.ToString()+":"+seconds.ToString();
+
         var data = new
         {
+            Dia = day.ToString(),
+            Mes = month.ToString(),
+            Año = year.ToString(),
+            Hora = tiempo,
             Alias = username,
             Confianza = confidence
         };
