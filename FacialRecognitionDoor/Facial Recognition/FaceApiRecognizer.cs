@@ -17,6 +17,7 @@ namespace FacialRecognitionDoor.FacialRecognition
         private FaceApiWhitelist _whitelist = null;
         private IFaceServiceClient _faceApiClient = null;
         private StorageFolder _whitelistFolder = null;
+
         #endregion
 
         #region Properties
@@ -490,42 +491,43 @@ namespace FacialRecognitionDoor.FacialRecognition
             SlackClient client = new SlackClient(urlWithAccessToken);
 
             client.PostMessage(username: "IronDoor",
-                       text: message + " ha entrado por IronDoor con una confianza del "+confidence+" %",
+                       text: message + " ha entrado por IronDoor con una confianza del " + confidence + " %",
                        channel: "#status");
         }
 
-        #region Face recognition
-        public async Task<List<string>> FaceRecognizeAsync(StorageFile imageFile)
+    #region Face recognition
+    public async Task<List<string>> FaceRecognizeAsync(StorageFile imageFile)
+    {
+        var recogResult = new List<string>();
+
+        if (!FaceApiUtils.ValidateImageFile(imageFile))
         {
-            var recogResult = new List<string>();
-
-            if (!FaceApiUtils.ValidateImageFile(imageFile))
-            {
-                throw new FaceRecognitionException(FaceRecognitionExceptionType.InvalidImage);
-            }
-
-            // detect all faces in the image
-            var faceIds = await DetectFacesFromImage(imageFile);
-
-            // try to identify all faces to person
-            var identificationResults = await _faceApiClient.IdentifyAsync(WhitelistId, faceIds);
-
-            // add identified person name to result list
-            foreach (var result in identificationResults)
-            {
-                if (result.Candidates.Length > 0)
-                {
-                    var personName = _whitelist.GetPersonNameById(result.Candidates[0].PersonId);
-                    //Debug.WriteLine("Face ID Confidence: " + Math.Round(result.Candidates[0].Confidence * 100, 1) + "%");
-                    recogResult.Add(personName);
-                    int confianza = (int)Math.Round(result.Candidates[0].Confidence * 100, 1);
-                    TestPostMessage(personName, confianza);
-                    await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(); });
-                }
-            }
-            
-            return recogResult;
+            throw new FaceRecognitionException(FaceRecognitionExceptionType.InvalidImage);
         }
+
+        // detect all faces in the image
+        var faceIds = await DetectFacesFromImage(imageFile);
+
+        // try to identify all faces to person
+        var identificationResults = await _faceApiClient.IdentifyAsync(WhitelistId, faceIds);
+
+        // add identified person name to result list
+        foreach (var result in identificationResults)
+        {
+            if (result.Candidates.Length > 0)
+            {
+                var personName = _whitelist.GetPersonNameById(result.Candidates[0].PersonId);
+                //Debug.WriteLine("Face ID Confidence: " + Math.Round(result.Candidates[0].Confidence * 100, 1) + "%");
+                recogResult.Add(personName);
+                int confianza = (int)Math.Round(result.Candidates[0].Confidence * 100, 1);
+                TestPostMessage(personName, confianza);
+                //await Task.Run(async () => { await SendDeviceToCloudMessageAsync(personName); });
+                await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(personName, confianza.ToString()); });
+                }
+        }
+
+        return recogResult;
+    }
         #endregion
     }
 }

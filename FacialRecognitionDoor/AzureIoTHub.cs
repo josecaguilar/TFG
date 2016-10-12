@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices.Client;
+using Newtonsoft.Json;
 
 static class AzureIoTHub
 {
@@ -18,17 +19,24 @@ static class AzureIoTHub
 
     // Refer to http://aka.ms/azure-iot-hub-vs-cs-wiki for more information on Connected Service for Azure IoT Hub
 
-    public static async Task SendDeviceToCloudMessageAsync()
+    public static async Task SendDeviceToCloudMessageAsync(string username, string confidence)
     {
         var deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Amqp);
 
 #if WINDOWS_UWP
-        var str = "Hello, Cloud from a UWP C# app!";
+        //Original String from AzureIoTHub Nuget Package
+        //var str = "Hello, Cloud from a UWP C# app!";
+        var data = new
+        {
+            Alias = username,
+            Confianza = confidence
+        };
 #else
         var str = "Hello, Cloud from a C# app!";
 #endif
-        var message = new Message(Encoding.ASCII.GetBytes(str));
-
+        //Original String from AzureIoTHub Nuget Package
+        //var message = new Message(Encoding.ASCII.GetBytes(str));
+        var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data)));
         await deviceClient.SendEventAsync(message);
     }
 
