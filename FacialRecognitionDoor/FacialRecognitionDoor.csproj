@@ -97,11 +97,13 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <None Include="FacialRecognitionDoor_TemporaryKey.pfx" />
     <None Include="project.json" />
+    <None Include="Service References\IronDoorIoTHub\ConnectedService.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AzureIoTHub.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="CreditsPage.xaml.cs">
       <DependentUpon>CreditsPage.xaml</DependentUpon>
