@@ -52,6 +52,19 @@ static class AzureIoTHub
         var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data)));
         await deviceClient.SendEventAsync(message);
     }
+    
+    public static async Task SendTemperatureAsync(string temperature)
+    {
+        var deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Amqp);
+
+        var data = new
+        {
+            Temperatura = temperature
+        };
+        //Original String from AzureIoTHub Nuget Package
+        var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data)));
+        await deviceClient.SendEventAsync(message);
+    }
 
     public static async Task<string> ReceiveCloudToDeviceMessageAsync()
     {

@@ -41,6 +41,7 @@ namespace FacialRecognitionDoor
 
         // GUI Related Variables:
         private double visitorIDPhotoGridMaxWidth = 0;
+        public Temperature temp = new Temperature();
 
         /// <summary>
         /// Called when the page is first navigated to.

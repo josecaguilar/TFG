@@ -523,7 +523,7 @@ namespace FacialRecognitionDoor.FacialRecognition
                 TestPostMessage(personName, confianza);
                 //await Task.Run(async () => { await SendDeviceToCloudMessageAsync(personName); });
                 await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(personName, confianza.ToString()); });
-                }
+            }
         }
 
         return recogResult;
