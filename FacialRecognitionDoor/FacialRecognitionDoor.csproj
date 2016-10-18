@@ -108,6 +108,7 @@
     <Compile Include="CreditsPage.xaml.cs">
       <DependentUpon>CreditsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Facial Recognition\EmotionsAPI.cs" />
     <Compile Include="Facial Recognition\FaceApiRecognizer.cs" />
     <Compile Include="Facial Recognition\FaceApiUtils.cs" />
     <Compile Include="Facial Recognition\FaceApiWhitelist.cs" />

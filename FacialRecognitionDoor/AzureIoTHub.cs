@@ -66,6 +66,19 @@ static class AzureIoTHub
         await deviceClient.SendEventAsync(message);
     }
 
+    public static async Task SendHumorAsync(string estadohumor)
+    {
+        var deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Amqp);
+
+        var data = new
+        {
+            Humor = estadohumor
+        };
+        //Original String from AzureIoTHub Nuget Package
+        var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data)));
+        await deviceClient.SendEventAsync(message);
+    }
+
     public static async Task<string> ReceiveCloudToDeviceMessageAsync()
     {
         var deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Amqp);

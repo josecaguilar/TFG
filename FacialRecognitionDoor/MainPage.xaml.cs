@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Navigation;
 using FacialRecognitionDoor.Helpers;
 using FacialRecognitionDoor.Objects;
 using Microsoft.ProjectOxford.Face;
+using FacialRecognitionDoor.Facial_Recognition;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -41,7 +42,12 @@ namespace FacialRecognitionDoor
 
         // GUI Related Variables:
         private double visitorIDPhotoGridMaxWidth = 0;
-        public Temperature temp = new Temperature();
+
+        // Temperature
+        private Temperature temp = new Temperature();
+
+        // Emotions API
+        private EmotionsAPI emotions = new EmotionsAPI();
 
         /// <summary>
         /// Called when the page is first navigated to.
@@ -237,7 +243,6 @@ namespace FacialRecognitionDoor
             {
                 // Stores current frame from webcam feed in a temporary folder
                 StorageFile image = await webcam.CapturePhoto();
-
                 try
                 {
                     // Oxford determines whether or not the visitor is on the Whitelist and returns true if so
@@ -267,6 +272,7 @@ namespace FacialRecognitionDoor
                 {
                     // If everything went well and a visitor was recognized, unlock the door:
                     UnlockDoor(recognizedVisitors[0]);
+                    emotions.analyze(image, recognizedVisitors[0]);
                 }
                 else
                 {

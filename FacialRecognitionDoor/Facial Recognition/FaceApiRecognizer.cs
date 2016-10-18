@@ -521,7 +521,6 @@ namespace FacialRecognitionDoor.FacialRecognition
                 recogResult.Add(personName);
                 int confianza = (int)Math.Round(result.Candidates[0].Confidence * 100, 1);
                 TestPostMessage(personName, confianza);
-                //await Task.Run(async () => { await SendDeviceToCloudMessageAsync(personName); });
                 await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(personName, confianza.ToString()); });
             }
         }
