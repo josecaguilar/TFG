@@ -13,7 +13,7 @@ namespace FacialRecognitionDoor.Facial_Recognition
 {
     class EmotionsAPI
     {
-        public async void analyze(StorageFile photo, string username)
+        public async Task<string> analyze(StorageFile photo, string username)
         {
             // Setup http content using stream of captured photo
             IRandomAccessStream stream = await photo.OpenAsync(FileAccessMode.Read);
@@ -78,12 +78,12 @@ namespace FacialRecognitionDoor.Facial_Recognition
             decimal sorpre = decimal.Parse(sorpresa, NumberStyles.Float) * 100;
             string sorpresasub = sorpre.ToString().Substring(0, sorpre.ToString().IndexOf(".")) + " %";
 
-            Debug.WriteLine("Enfado: " + enfadosub + "\n");
+           /* Debug.WriteLine("Enfado: " + enfadosub + "\n");
             Debug.WriteLine("Asustado: " + fearsub + "\n");
             Debug.WriteLine("Felicidad: " + felisub + "\n");
             Debug.WriteLine("Neutral: " + neutrosub + "\n");
             Debug.WriteLine("Triste: " + tristesub + "\n");
-            Debug.WriteLine("Sorpresa: " + sorpresasub + "\n");
+            Debug.WriteLine("Sorpresa: " + sorpresasub + "\n");*/
 
             string predominante;
 
@@ -115,8 +115,9 @@ namespace FacialRecognitionDoor.Facial_Recognition
                     predominante = "";
                     break;
             }
-            await Task.Run(async () => { await AzureIoTHub.SendHumorAsync(predominante); });
-            TestPostMessage("Hoy veo a "+username+" un " + max.ToString().Substring(0, max.ToString().IndexOf(".")) + " % " + predominante);
+           // await Task.Run(async () => { await AzureIoTHub.SendHumorAsync(predominante); });
+            TestPostMessage("Le veo a: "+username+" un " + max.ToString().Substring(0, max.ToString().IndexOf(".")) + " % " + predominante+" en estos momentos");
+            return predominante;
         }
 
         public void TestPostMessage(string message)
@@ -126,8 +127,8 @@ namespace FacialRecognitionDoor.Facial_Recognition
             SlackClient client = new SlackClient(urlWithAccessToken);
 
             client.PostMessage(username: "IronDoor",
-                       text: "IronDoor 1: " + message,
-                       channel: "#login");
+                       text: message,
+                       channel: "#status");
         }
     }
 }

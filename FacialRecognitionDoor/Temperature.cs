@@ -17,6 +17,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.Storage;
+using FacialRecognitionDoor.Helpers;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -27,10 +29,13 @@ namespace FacialRecognitionDoor
     /// </summary>
     public class Temperature
     {
+        public WebcamHelper webcam;
+        private StorageFile currentIdPhotoFile;
+
         public Temperature()
         {
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(10000);
+            timer.Interval = TimeSpan.FromMilliseconds(15000); //15 seconds as Timestamp
             timer.Tick += Timer_Tick;
             timer.Start();
             
@@ -77,6 +82,20 @@ namespace FacialRecognitionDoor
             if (livetemperature() >= 24)
             {
                 TestPostMessage(livetemperature().ToString());
+                //Take photo and save into Intrusos
+                if (webcam == null || !webcam.IsInitialized())
+                {
+                    // Initialize Webcam Helper
+                    webcam = new WebcamHelper();
+                    await webcam.InitializeCameraAsync();
+                }
+                currentIdPhotoFile = await webcam.CapturePhoto();
+                // Create or open the folder in which the Whitelist is stored
+                StorageFolder whitelistFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync(GeneralConstants.WhiteListFolderName, CreationCollisionOption.OpenIfExists);
+                // Create a folder to store this specific user's photos
+                StorageFolder currentFolder = await whitelistFolder.CreateFolderAsync("Intrusos", CreationCollisionOption.OpenIfExists);
+                // Move the already captured photo the user's folder
+                await currentIdPhotoFile.MoveAsync(currentFolder);
             }
             await Task.Run(async () => { await AzureIoTHub.SendTemperatureAsync(livetemperature().ToString()); });
         }

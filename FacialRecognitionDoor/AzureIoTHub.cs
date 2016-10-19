@@ -19,7 +19,7 @@ static class AzureIoTHub
 
     // Refer to http://aka.ms/azure-iot-hub-vs-cs-wiki for more information on Connected Service for Azure IoT Hub
 
-    public static async Task SendDeviceToCloudMessageAsync(string username, string confidence)
+    public static async Task SendDeviceToCloudMessageAsync(string username, string confidence, Task<string> humorstatus)
     {
         var deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Amqp);
 
@@ -42,10 +42,11 @@ static class AzureIoTHub
             Año = year.ToString(),
             Hora = tiempo,
             Alias = username,
-            Confianza = confidence
+            Confianza = confidence,
+            Humor = humorstatus.Result
         };
 #else
-        var str = "Hello, Cloud from a C# app!";
+        //var str = "Hello, Cloud from a C# app!";
 #endif
         //Original String from AzureIoTHub Nuget Package
         //var message = new Message(Encoding.ASCII.GetBytes(str));
@@ -62,23 +63,11 @@ static class AzureIoTHub
             Temperatura = temperature
         };
         //Original String from AzureIoTHub Nuget Package
+        //var message = new Message(Encoding.ASCII.GetBytes(str));
         var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data)));
         await deviceClient.SendEventAsync(message);
     }
-
-    public static async Task SendHumorAsync(string estadohumor)
-    {
-        var deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Amqp);
-
-        var data = new
-        {
-            Humor = estadohumor
-        };
-        //Original String from AzureIoTHub Nuget Package
-        var message = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data)));
-        await deviceClient.SendEventAsync(message);
-    }
-
+    
     public static async Task<string> ReceiveCloudToDeviceMessageAsync()
     {
         var deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Amqp);
@@ -93,7 +82,6 @@ static class AzureIoTHub
                 await deviceClient.CompleteAsync(receivedMessage);
                 return messageData;
             }
-
             await Task.Delay(TimeSpan.FromSeconds(1));
         }
     }

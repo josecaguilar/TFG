@@ -48,6 +48,7 @@ namespace FacialRecognitionDoor
 
         // Emotions API
         private EmotionsAPI emotions = new EmotionsAPI();
+        public Task<string> humor;
 
         /// <summary>
         /// Called when the page is first navigated to.
@@ -272,7 +273,11 @@ namespace FacialRecognitionDoor
                 {
                     // If everything went well and a visitor was recognized, unlock the door:
                     UnlockDoor(recognizedVisitors[0]);
-                    emotions.analyze(image, recognizedVisitors[0]);
+                    humor = emotions.analyze(image, recognizedVisitors[0]);
+                    //Post to Slack
+                    TestPostMessage(recognizedVisitors[0],FaceApiRecognizer.Instance.confianza);
+                    //Post to AzureIoTHub
+                    await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(recognizedVisitors[0], FaceApiRecognizer.Instance.confianza.ToString(), humor); });
                 }
                 else
                 {
@@ -298,6 +303,17 @@ namespace FacialRecognitionDoor
 
             doorbellJustPressed = false;
             AnalysingVisitorGrid.Visibility = Visibility.Collapsed;
+        }
+
+        public void TestPostMessage(string user, int confidence)
+        {
+            string urlWithAccessToken = GeneralConstants.SlackURI;
+
+            SlackClient client = new SlackClient(urlWithAccessToken);
+
+            client.PostMessage(username: "IronDoor",
+                       text: user + " ha entrado por IronDoor con una confianza del " + confidence + " %",
+                       channel: "#status");
         }
 
         /// <summary>

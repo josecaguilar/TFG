@@ -11,6 +11,7 @@ namespace FacialRecognitionDoor.FacialRecognition
 {
     class FaceApiRecognizer : IFaceRecognizer
     {
+        public int confianza;
         #region Private members
         private static readonly Lazy<FaceApiRecognizer> _recognizer = new Lazy<FaceApiRecognizer>(() => new FaceApiRecognizer());
 
@@ -484,16 +485,7 @@ namespace FacialRecognitionDoor.FacialRecognition
         }
         #endregion
 
-        public void TestPostMessage(string message, int confidence)
-        {
-            string urlWithAccessToken = GeneralConstants.SlackURI;
-
-            SlackClient client = new SlackClient(urlWithAccessToken);
-
-            client.PostMessage(username: "IronDoor",
-                       text: message + " ha entrado por IronDoor con una confianza del " + confidence + " %",
-                       channel: "#status");
-        }
+       
 
     #region Face recognition
     public async Task<List<string>> FaceRecognizeAsync(StorageFile imageFile)
@@ -519,9 +511,9 @@ namespace FacialRecognitionDoor.FacialRecognition
                 var personName = _whitelist.GetPersonNameById(result.Candidates[0].PersonId);
                 //Debug.WriteLine("Face ID Confidence: " + Math.Round(result.Candidates[0].Confidence * 100, 1) + "%");
                 recogResult.Add(personName);
-                int confianza = (int)Math.Round(result.Candidates[0].Confidence * 100, 1);
-                TestPostMessage(personName, confianza);
-                await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(personName, confianza.ToString()); });
+                confianza = (int)Math.Round(result.Candidates[0].Confidence * 100, 1);
+                /*TestPostMessage(personName, confianza);
+                await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(personName, confianza.ToString(), humor); });*/
             }
         }
 

@@ -21,7 +21,7 @@
     <ApplicationInsightsResourceId />
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Never</AppxBundle>
-    <PackageCertificateThumbprint>46DCF6E88F383A8EDDA9990F87DAA02C20A27ACE</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>A75EB1890030788EA22356EB6B2F476814ACC928</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
