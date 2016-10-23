@@ -82,6 +82,8 @@ namespace FacialRecognitionDoor
             if (livetemperature() >= 23)
             {
                 TestPostMessage(livetemperature().ToString());
+                var date = DateTime.Now;
+                
                 //Take photo and save into Intrusos
                 if (webcam == null || !webcam.IsInitialized())
                 {
@@ -91,9 +93,9 @@ namespace FacialRecognitionDoor
                 }
                 currentIdPhotoFile = await webcam.CapturePhoto();
                 // Create or open the folder in which the Whitelist is stored
-                StorageFolder whitelistFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync(GeneralConstants.WhiteListFolderName, CreationCollisionOption.OpenIfExists);
+                StorageFolder whitelistFolder = await KnownFolders.PicturesLibrary.CreateFolderAsync("Intrusos", CreationCollisionOption.OpenIfExists);
                 // Create a folder to store this specific user's photos
-                StorageFolder currentFolder = await whitelistFolder.CreateFolderAsync("Intrusos", CreationCollisionOption.OpenIfExists);
+                StorageFolder currentFolder = await whitelistFolder.CreateFolderAsync(date.Day.ToString()+"-"+date.Month.ToString()+"-"+date.Year.ToString(), CreationCollisionOption.OpenIfExists);
                 // Move the already captured photo the user's folder
                 await currentIdPhotoFile.MoveAsync(currentFolder);
             }
@@ -115,7 +117,7 @@ namespace FacialRecognitionDoor
             SlackClient client = new SlackClient(urlWithAccessToken);
 
             client.PostMessage(username: "IronDoor",
-                       text: "Temperatura IronDoor 1: " + message + "ºC, la puerta ha sido comprometida.",
+                       text: "Temperatura IronDoor 1: " + message + "ºC, la puerta ha sido comprometida, tomando fotos del intruso",
                        channel: "#status");
         }
 

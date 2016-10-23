@@ -12,6 +12,7 @@ namespace FacialRecognitionDoor.Helpers
         private GpioController gpioController;
         private GpioPin doorbellPin;
         private GpioPin doorLockPin;
+        private GpioPin LockIntruderPin;
 
         /// <summary>
         /// Attempts to initialize Gpio for application. This includes doorbell interaction and locking/unlccking of door.
@@ -62,6 +63,18 @@ namespace FacialRecognitionDoor.Helpers
             // Initializes pin to low voltage. This locks the door. 
             doorLockPin.Write(GpioPinValue.Low);
 
+            // Opens the GPIO pin that interacts with the intruder notification system
+            LockIntruderPin = gpioController.OpenPin(GpioConstants.LockIntruderPinID);
+            if (LockIntruderPin == null)
+            {
+                // Pin wasn't opened properly, return false
+                return false;
+            }
+            // Sets doorbell pin drive mode to output as pin will be used to output information to lock
+            LockIntruderPin.SetDriveMode(GpioPinDriveMode.Output);
+            // Initializes pin to low voltage. This locks the door. 
+            LockIntruderPin.Write(GpioPinValue.Low);
+
             //Initialization was successfull, return true
             return true;
         }
@@ -85,6 +98,19 @@ namespace FacialRecognitionDoor.Helpers
             await Task.Delay(TimeSpan.FromSeconds(GpioConstants.DoorLockOpenDurationSeconds));
             // Lock door
             doorLockPin.Write(GpioPinValue.Low);
+        }
+
+        /// <summary>
+        /// Unlocks door for time specified in GpioConstants class
+        /// </summary>
+        public async void IntruderNotification()
+        {
+            // Send notification to Intruder
+            LockIntruderPin.Write(GpioPinValue.High);
+            // Wait for specified length
+            await Task.Delay(TimeSpan.FromSeconds(GpioConstants.DoorLockOpenDurationSeconds));
+            // Shutdown notification
+            LockIntruderPin.Write(GpioPinValue.Low);
         }
 
     }

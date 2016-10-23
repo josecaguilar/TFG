@@ -271,18 +271,38 @@ namespace FacialRecognitionDoor
                 
                 if(recognizedVisitors.Count > 0)
                 {
-                    // If everything went well and a visitor was recognized, unlock the door:
-                    UnlockDoor(recognizedVisitors[0]);
-                    humor = emotions.analyze(image, recognizedVisitors[0]);
-                    //Post to Slack
-                    TestPostMessage(recognizedVisitors[0],FaceApiRecognizer.Instance.confianza);
-                    //Post to AzureIoTHub
-                    await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(recognizedVisitors[0], FaceApiRecognizer.Instance.confianza, humor); });
+                    Debug.WriteLine("Llego en OK");
+                    Login logon = new Login();
+                    logon.ClearCache();
+                    logon.Search(recognizedVisitors[0], "irondoor.onmicrosoft.com");
+                    bool ok = logon.PrintCache();
+                    if (ok) {
+                        // If everything went well and a visitor was recognized, unlock the door:
+                        UnlockDoor(recognizedVisitors[0]);
+                        humor = emotions.analyze(image, recognizedVisitors[0]);
+                        //Post to Slack
+                        TestPostMessage(recognizedVisitors[0], FaceApiRecognizer.Instance.confianza);
+                        //Post to AzureIoTHub
+                        await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(recognizedVisitors[0], FaceApiRecognizer.Instance.confianza, humor); });
+                    }else {
+                        // Otherwise, inform user that they were not recognized by the system
+                        await speech.Read(SpeechContants.VisitorNotRecognizedMessage);
+                        if (gpioAvailable)
+                        {
+                            // Send notification to the Intruder for specified ammount of time
+                            gpioHelper.IntruderNotification();
+                        }
+                    }
                 }
                 else
                 {
                     // Otherwise, inform user that they were not recognized by the system
                     await speech.Read(SpeechContants.VisitorNotRecognizedMessage);
+                    if (gpioAvailable)
+                    {
+                        // Send notification to the Intruder for specified ammount of time
+                        gpioHelper.IntruderNotification();
+                    }
                 }
             }
             else

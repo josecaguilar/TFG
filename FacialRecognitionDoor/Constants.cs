@@ -47,6 +47,9 @@
         // The GPIO pin that the door lock is attached to
         public const int DoorLockPinID = 4;
 
+        // The GPIO pin that the door lock is attached to
+        public const int LockIntruderPinID = 26;
+
         // The amount of time in seconds that the door will remain unlocked for
         public const int DoorLockOpenDurationSeconds = 10;
     }

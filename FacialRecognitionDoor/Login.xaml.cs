@@ -34,7 +34,7 @@ namespace FacialRecognitionDoor
         public const string clientId = "731c53ea-3042-4f8d-8da3-a8fcad30fa85";
         public bool ok = false;
         
-        public void PrintCache()
+        public bool PrintCache()
         {
             PrintCache printed = new PrintCache();
             string sub = printed.Cache();
@@ -47,13 +47,14 @@ namespace FacialRecognitionDoor
             {
                 ok = false;
             }
+            return ok;
         }
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
             //ClearCache();
             Search("jlcarrillo", "irondoor.onmicrosoft.com");
-            PrintCache();
+            bool ok = PrintCache();
             if (ok)
             {
                 Frame.Navigate(typeof(MainPage));
@@ -69,9 +70,9 @@ namespace FacialRecognitionDoor
             this.InitializeComponent();
         }
 
-        private void Search(string searchterm, string tenant)
+        public void Search(string searchterm, string tenant)
         {
-            AuthenticationResult ar = GetToken(tenant);
+            AuthenticationResult ar = GetToken(tenant, searchterm);
             if (ar != null)
             {
                 JObject jResult = null;
@@ -124,7 +125,7 @@ namespace FacialRecognitionDoor
             }
         }
 
-        static void ClearCache()
+        public void ClearCache() //static
         {
             AuthenticationContext ctx = new AuthenticationContext("https://login.microsoftonline.com/common");
             ctx.TokenCache.Clear();
@@ -132,7 +133,7 @@ namespace FacialRecognitionDoor
             Debug.WriteLine("Token cache cleared.");
         }
 
-        public void TestPostMessage(string message)
+        public void TestPostMessage(string user, string message)
         {
             string urlWithAccessToken = GeneralConstants.SlackURI;
         
@@ -140,10 +141,10 @@ namespace FacialRecognitionDoor
 
             client.PostMessage(username: "IronDoor",
                        text: "IronDoor 1: "+message,
-                       channel: "#login");
+                       channel: "@"+user);
         }
 
-        private AuthenticationResult GetToken(string tenant) //static
+        private AuthenticationResult GetToken(string tenant, string username) //static
         {
             AuthenticationContext ctx = null;
             if (tenant != null)
@@ -167,7 +168,7 @@ namespace FacialRecognitionDoor
                 var adalEx = exc.InnerException as AdalException;
                 if ((adalEx != null) && (adalEx.ErrorCode == "failed_to_acquire_token_silently"))
                 {
-                    result = GetTokenViaCode(ctx);
+                    result = GetTokenViaCode(ctx, username);
                 }
                 else
                 {
@@ -180,13 +181,13 @@ namespace FacialRecognitionDoor
 
         }
         
-        private AuthenticationResult GetTokenViaCode(AuthenticationContext ctx) //static
+        private AuthenticationResult GetTokenViaCode(AuthenticationContext ctx, string username) //static
         {
             AuthenticationResult result = null;
             try
             {
                 DeviceCodeResult codeResult = ctx.AcquireDeviceCodeAsync(resource, clientId).Result;
-                TestPostMessage(codeResult.Message);
+                TestPostMessage(username, codeResult.Message);
                 //Debug.WriteLine("You need to sign in.");
                 //Debug.WriteLine("Message: " + codeResult.Message + "\n");
                 result = ctx.AcquireTokenByDeviceCodeAsync(codeResult).Result;
