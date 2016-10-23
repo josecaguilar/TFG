@@ -79,7 +79,7 @@ namespace FacialRecognitionDoor
         }
         private async void Timer_Tick(object sender, object e)
         {
-            if (livetemperature() >= 24)
+            if (livetemperature() >= 23)
             {
                 TestPostMessage(livetemperature().ToString());
                 //Take photo and save into Intrusos
@@ -97,7 +97,7 @@ namespace FacialRecognitionDoor
                 // Move the already captured photo the user's folder
                 await currentIdPhotoFile.MoveAsync(currentFolder);
             }
-            await Task.Run(async () => { await AzureIoTHub.SendTemperatureAsync(livetemperature().ToString()); });
+            await Task.Run(async () => { await AzureIoTHub.SendTemperatureAsync(livetemperature()); });
         }
         public int livetemperature()
         {

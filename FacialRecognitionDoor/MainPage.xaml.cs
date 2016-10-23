@@ -277,7 +277,7 @@ namespace FacialRecognitionDoor
                     //Post to Slack
                     TestPostMessage(recognizedVisitors[0],FaceApiRecognizer.Instance.confianza);
                     //Post to AzureIoTHub
-                    await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(recognizedVisitors[0], FaceApiRecognizer.Instance.confianza.ToString(), humor); });
+                    await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(recognizedVisitors[0], FaceApiRecognizer.Instance.confianza, humor); });
                 }
                 else
                 {

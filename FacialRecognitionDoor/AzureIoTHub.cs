@@ -19,7 +19,7 @@ static class AzureIoTHub
 
     // Refer to http://aka.ms/azure-iot-hub-vs-cs-wiki for more information on Connected Service for Azure IoT Hub
 
-    public static async Task SendDeviceToCloudMessageAsync(string username, string confidence, Task<string> humorstatus)
+    public static async Task SendDeviceToCloudMessageAsync(string username, int confidence, Task<string> humorstatus)
     {
         var deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Amqp);
 
@@ -33,7 +33,8 @@ static class AzureIoTHub
         var hora = date.Hour;
         var minutes = date.Minute;
         var seconds = date.Second;
-        string tiempo = hora.ToString()+":"+minutes.ToString()+":"+seconds.ToString();
+        //Format Time
+        string tiempo = hora.ToString("00")+":"+minutes.ToString("00")+":"+seconds.ToString("00");
 
         var data = new
         {
@@ -54,12 +55,26 @@ static class AzureIoTHub
         await deviceClient.SendEventAsync(message);
     }
     
-    public static async Task SendTemperatureAsync(string temperature)
+    public static async Task SendTemperatureAsync(int temperature)
     {
         var deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString, TransportType.Amqp);
 
+        var date = DateTime.Now;
+        var year = date.Year;
+        var month = date.Month;
+        var day = date.Day;
+        var hora = date.Hour;
+        var minutes = date.Minute;
+        var seconds = date.Second;
+        //Format Time
+        string tiempo = hora.ToString("00") + ":" + minutes.ToString("00") + ":" + seconds.ToString("00");
+
         var data = new
         {
+            TDia = day.ToString(),
+            TMes = month.ToString(),
+            TAño = year.ToString(),
+            THora = tiempo,
             Temperatura = temperature
         };
         //Original String from AzureIoTHub Nuget Package

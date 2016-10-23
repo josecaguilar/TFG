@@ -4,7 +4,7 @@
     "Microsoft.ApplicationInsights.PersistenceChannel": "1.2.3",
     "Microsoft.ApplicationInsights.WindowsApps": "1.1.1",
     "Microsoft.Azure.Amqp": "1.1.5",
-    "Microsoft.Azure.Devices.Client": "1.0.20",
+    "Microsoft.Azure.Devices.Client": "1.0.21",
     "Microsoft.IdentityModel.Clients.ActiveDirectory": "3.13.5",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
     "Microsoft.ProjectOxford.Face": "1.2.1.2",
