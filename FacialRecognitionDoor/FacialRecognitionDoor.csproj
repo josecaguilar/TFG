@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FacialRecognitionDoor</RootNamespace>
     <AssemblyName>FacialRecognitionDoor</AssemblyName>
-    <DefaultLanguage>es-ES</DefaultLanguage>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
@@ -21,7 +21,7 @@
     <ApplicationInsightsResourceId />
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Never</AppxBundle>
-    <PackageCertificateThumbprint>7A2F31F7A0FD726AB54C4192302BEF7440629442</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>12CD2EDC8AF9060A2FC775F71117543E58550EC6</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>

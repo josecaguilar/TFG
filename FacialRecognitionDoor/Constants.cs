@@ -34,6 +34,10 @@
         {
             return "¡Bienvenido a la sala del tribunal " + visitorName + "! Mucha suerte.";
         }
+
+        public const string CountDownLogin = "Quedan 15 segundos para iniciar sesión.";
+
+        public const string GameOver = "Tiempo de espera agotado.";
     }
 
     /// <summary>

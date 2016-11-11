@@ -50,6 +50,10 @@ namespace FacialRecognitionDoor
         private EmotionsAPI emotions = new EmotionsAPI();
         public Task<string> humor;
 
+        //Login Timer
+        private DispatcherTimer timer;
+        public int elapsedTime;
+
         /// <summary>
         /// Called when the page is first navigated to.
         /// </summary>
@@ -272,11 +276,18 @@ namespace FacialRecognitionDoor
                 if(recognizedVisitors.Count > 0)
                 {
                     Debug.WriteLine("Llego en OK");
+                    elapsedTime = 0;
+                    timer = new DispatcherTimer();
+                    timer.Start();
+                    timer.Interval = new TimeSpan(0, 0, 1); //Count by second
+                    timer.Tick += timer_Tick;
+
                     Login logon = new Login();
                     logon.ClearCache();
-                    logon.Search(recognizedVisitors[0], "irondoor.onmicrosoft.com");
+                    await logon.Search(recognizedVisitors[0], "irondoor.onmicrosoft.com");
                     bool ok = logon.PrintCache();
-                    if (ok) {
+                    if (ok && elapsedTime < 30) {
+                        timer.Stop();
                         // If everything went well and a visitor was recognized, unlock the door:
                         UnlockDoor(recognizedVisitors[0]);
                         humor = emotions.analyze(image, recognizedVisitors[0]);
@@ -286,7 +297,17 @@ namespace FacialRecognitionDoor
                         await Task.Run(async () => { await AzureIoTHub.SendDeviceToCloudMessageAsync(recognizedVisitors[0], FaceApiRecognizer.Instance.confianza, humor); });
                     }else {
                         // Otherwise, inform user that they were not recognized by the system
-                        await speech.Read(SpeechContants.VisitorNotRecognizedMessage);
+                        if (elapsedTime == 30)
+                        {
+                            // Time excedeed
+                            await speech.Read(SpeechContants.GameOver);
+                        }
+                        else
+                        {
+                            // User not found
+                            await speech.Read(SpeechContants.VisitorNotRecognizedMessage);
+                        }
+
                         if (gpioAvailable)
                         {
                             // Send notification to the Intruder for specified ammount of time
@@ -323,6 +344,27 @@ namespace FacialRecognitionDoor
 
             doorbellJustPressed = false;
             AnalysingVisitorGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private async void timer_Tick(object sender, object e)
+        {
+            elapsedTime++;
+            Debug.WriteLine("ElapsedTime: " + elapsedTime);
+            if (elapsedTime == 15)
+            {
+                await speech.Read(SpeechContants.CountDownLogin);
+            }
+            else if (elapsedTime == 30)
+            {
+                // Otherwise, inform user that they were not recognized by the system
+                await speech.Read(SpeechContants.VisitorNotRecognizedMessage);
+                if (gpioAvailable)
+                {
+                    // Send notification to the Intruder for specified ammount of time
+                    gpioHelper.IntruderNotification();
+                }
+                timer.Stop();
+            }
         }
 
         public void TestPostMessage(string user, int confidence)

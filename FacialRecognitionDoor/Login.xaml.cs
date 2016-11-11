@@ -50,10 +50,10 @@ namespace FacialRecognitionDoor
             return ok;
         }
 
-        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        private async void btnSearch_Click(object sender, RoutedEventArgs e)
         {
             //ClearCache();
-            Search("jlcarrillo", "irondoor.onmicrosoft.com");
+            await Search("jlcarrillo", "irondoor.onmicrosoft.com");
             bool ok = PrintCache();
             if (ok)
             {
@@ -70,9 +70,9 @@ namespace FacialRecognitionDoor
             this.InitializeComponent();
         }
 
-        public void Search(string searchterm, string tenant)
+        public async Task Search(string searchterm, string tenant)
         {
-            AuthenticationResult ar = GetToken(tenant, searchterm);
+            AuthenticationResult ar = await GetToken(tenant, searchterm);
             if (ar != null)
             {
                 JObject jResult = null;
@@ -86,9 +86,9 @@ namespace FacialRecognitionDoor
                     HttpClient client = new HttpClient();
                     HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, graphRequest);
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", ar.AccessToken);
-                    HttpResponseMessage response = client.SendAsync(request).Result;
+                    HttpResponseMessage response = await client.SendAsync(request);
 
-                    string content = response.Content.ReadAsStringAsync().Result;
+                    string content = await response.Content.ReadAsStringAsync();
                     jResult = JObject.Parse(content);
                 }
                 catch (Exception ee)
@@ -140,11 +140,11 @@ namespace FacialRecognitionDoor
             SlackClient client = new SlackClient(urlWithAccessToken);
 
             client.PostMessage(username: "IronDoor",
-                       text: "IronDoor 1: "+message,
+                       text: "IronDoor: "+message,
                        channel: "@"+user);
         }
 
-        private AuthenticationResult GetToken(string tenant, string username) //static
+        public async Task<AuthenticationResult> GetToken(string tenant, string username) //static
         {
             AuthenticationContext ctx = null;
             if (tenant != null)
@@ -165,14 +165,14 @@ namespace FacialRecognitionDoor
             }
             catch (Exception exc)
             {
-                var adalEx = exc.InnerException as AdalException;
-                if ((adalEx != null) && (adalEx.ErrorCode == "failed_to_acquire_token_silently"))
+                //var adalEx = exc.InnerException as AdalException;
+                //if ((adalEx != null) && (adalEx.ErrorCode == "failed_to_acquire_token_silently"))
+                if (exc is AdalException || exc.InnerException is AdalException)
                 {
-                    result = GetTokenViaCode(ctx, username);
+                    result = await GetTokenViaCode(ctx, username);
                 }
                 else
                 {
-          
                     Debug.WriteLine("Something went wrong.");
                     Debug.WriteLine("Message: " + exc.InnerException.Message + "\n");
                 }
@@ -181,16 +181,16 @@ namespace FacialRecognitionDoor
 
         }
         
-        private AuthenticationResult GetTokenViaCode(AuthenticationContext ctx, string username) //static
+        public async Task<AuthenticationResult> GetTokenViaCode(AuthenticationContext ctx, string username) //static
         {
             AuthenticationResult result = null;
             try
             {
-                DeviceCodeResult codeResult = ctx.AcquireDeviceCodeAsync(resource, clientId).Result;
+                DeviceCodeResult codeResult = await ctx.AcquireDeviceCodeAsync(resource, clientId);
                 TestPostMessage(username, codeResult.Message);
                 //Debug.WriteLine("You need to sign in.");
                 //Debug.WriteLine("Message: " + codeResult.Message + "\n");
-                result = ctx.AcquireTokenByDeviceCodeAsync(codeResult).Result;
+                result = await ctx.AcquireTokenByDeviceCodeAsync(codeResult);
             }
             catch (Exception exc)
             {
