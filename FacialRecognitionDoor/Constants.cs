@@ -56,5 +56,8 @@
 
         // The amount of time in seconds that the door will remain unlocked for
         public const int DoorLockOpenDurationSeconds = 10;
+
+        // The amount of time in miliseconds that the door will remain unlocked for
+        public const int ElapsedMiliSeconds = 200;
     }
 }

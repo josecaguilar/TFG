@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Media.SpeechSynthesis;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
 namespace FacialRecognitionDoor.Helpers
@@ -21,9 +22,9 @@ namespace FacialRecognitionDoor.Helpers
         public SpeechHelper(MediaElement media)
         {
             mediaElement = media;
-            //synthesizer = new SpeechSynthesizer();
+            synthesizer = new SpeechSynthesizer();
         }
-
+        
         /// <summary>
         /// Synthesizes passed through text as audio and plays speech through the MediaElement first sent through.
         /// </summary>

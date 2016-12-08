@@ -349,6 +349,11 @@ namespace FacialRecognitionDoor
         private async void timer_Tick(object sender, object e)
         {
             elapsedTime++;
+            if (gpioAvailable)
+            {
+                // Send notification to the Intruder for specified ammount of time
+                gpioHelper.ElapsedTimeNotification();
+            }
             Debug.WriteLine("ElapsedTime: " + elapsedTime);
             if (elapsedTime == 15)
             {
@@ -385,8 +390,8 @@ namespace FacialRecognitionDoor
         {
             // Greet visitor
             await speech.Read(SpeechContants.GeneralGreetigMessage(visitorName));
-            
-            if(gpioAvailable)
+
+            if (gpioAvailable)
             {
                 // Unlock door for specified ammount of time
                 gpioHelper.UnlockDoor();

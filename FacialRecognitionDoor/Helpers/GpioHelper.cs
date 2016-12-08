@@ -113,5 +113,15 @@ namespace FacialRecognitionDoor.Helpers
             LockIntruderPin.Write(GpioPinValue.Low);
         }
 
+        public async void ElapsedTimeNotification()
+        {
+            // Send notification to Intruder
+            LockIntruderPin.Write(GpioPinValue.High);
+            // Wait for specified length
+            await Task.Delay(TimeSpan.FromMilliseconds(GpioConstants.ElapsedMiliSeconds));
+            // Shutdown notification
+            LockIntruderPin.Write(GpioPinValue.Low);
+        }
+
     }
 }
